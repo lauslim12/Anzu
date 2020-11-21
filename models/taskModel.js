@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
   groupId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: 'Group',
     required: [true, 'A task must be assigned to a group!'],
   },
