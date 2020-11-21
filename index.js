@@ -48,18 +48,18 @@ const scheduleTask = async (event) => {
     const task = splitText.splice(2).join(' ');
 
     // 2. If there are any errors, resolve the function.
-    if (isNaN(Date.parse(chosenDate))) {
-      return Promise.resolve(null);
-    }
+    // if (isNaN(Date.parse(chosenDate))) {
+    //   return Promise.resolve(null);
+    // }
 
     // 3. Insert all the given data into the database.
-    // const newTask = await Task.create({
-    //   groupId: roomId,
-    //   name: task,
-    //   deadline: new Date(chosenDate),
-    // });
+    const newTask = await Task.create({
+      groupId: roomId,
+      name: task,
+      deadline: new Date(chosenDate),
+    });
 
-    // console.log(newTask);
+    console.log(newTask);
 
     // 4. Send back response to the user.
     const response = {
