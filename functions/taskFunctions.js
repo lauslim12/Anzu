@@ -19,7 +19,7 @@ const featureGuard = async (event) => {
         'Sorry, Anzu does not accept orders from anyone other than Nicholas Dwiarto. Please ask him instead.',
     };
 
-    return client.replyMessage(event.replyToken, response);
+    return await client.replyMessage(event.replyToken, response);
   }
 };
 
@@ -61,7 +61,7 @@ const scheduleTask = async (event) => {
     } has been created successfully!`
   );
 
-  return client.replyMessage(event.replyToken, response);
+  return await client.replyMessage(event.replyToken, response);
 };
 
 const getScheduledTasks = async (event) => {
@@ -90,7 +90,7 @@ const getScheduledTasks = async (event) => {
     `Hello everyone! Anzu is here to remind you all of your schedules. Here is it:\n\n${message}\n\nGood luck and stay in high spirits!`
   );
 
-  return client.replyMessage(event.replyToken, response);
+  return await client.replyMessage(event.replyToken, response);
 };
 
 const deleteScheduledTask = async (event) => {
@@ -107,7 +107,7 @@ const deleteScheduledTask = async (event) => {
     text: `Task with the name ${taskName} has been deleted!`,
   };
 
-  return client.replyMessage(event.replyToken, response);
+  return await client.replyMessage(event.replyToken, response);
 };
 
 const help = async (event) => {
@@ -117,7 +117,18 @@ const help = async (event) => {
 
   const response = createResponse(message);
 
-  return client.replyMessage(event.replyToken, response);
+  return await client.replyMessage(event.replyToken, response);
+};
+
+const leave = async (event) => {
+  const { roomId } = event.source;
+  const message =
+    'Thank you for using me! I will be taking my leave now. Bye-bye!';
+  const response = createResponse(message);
+
+  await client.replyMessage(response);
+
+  return await client.leaveRoom(roomId);
 };
 
 const apiCall = async (event) => {
@@ -139,6 +150,11 @@ const apiCall = async (event) => {
 
   if (text.startsWith('/help')) {
     return help(event);
+  }
+
+  if (text.startsWith('/leave')) {
+    featureGuard(event);
+    return leave(event);
   }
 
   if (text.includes('Anzu') || text.includes('anzu')) {
