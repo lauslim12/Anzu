@@ -23,52 +23,56 @@ const client = new line.Client(config);
 const app = express();
 
 const scheduleTask = async (event) => {
-  // Check for all variables.
-  const { roomId } = event.source;
+  try {
+    // Check for all variables.
+    const { roomId } = event.source;
 
-  // 0. Check if invalid input, Anzu does not need to respond.
-  if (event.type !== 'message' || event.message.type !== 'text') {
-    return Promise.resolve(null);
+    // 0. Check if invalid input, Anzu does not need to respond.
+    if (event.type !== 'message' || event.message.type !== 'text') {
+      return Promise.resolve(null);
+    }
+
+    // 1. Process the input from the user.
+    // Example input: '/schedule 2020-12-12 Working from home!'
+    const splitText = event.message.text.split(' ');
+    const command = splitText[0];
+    const chosenDate = splitText[1];
+    const task = splitText.splice(2).join(' ');
+
+    console.log(splitText, command, chosenDate, task);
+
+    // 2. If there are any errors, resolve the function.
+    if (command !== '/schedule' || command !== '/tasks') {
+      return Promise.resolve(null);
+    }
+
+    if (isNaN(Date.parse(chosenDate))) {
+      return Promise.resolve(null);
+    }
+
+    // 3. Insert all the given data into the database.
+    const newTask = await Task.create({
+      groupId: roomId,
+      name: task,
+      deadline: new Date(chosenDate),
+    });
+
+    console.log(newTask);
+
+    // 4. Send back response to the user.
+    const response = {
+      type: 'text',
+      message: `Thank you! Your task of '${
+        results.name
+      }' with the deadline being ${
+        new Date(results.deadline).toISOString().split('T')[0]
+      } has been created successfully!`,
+    };
+
+    return client.replyMessage(event.replyToken, response);
+  } catch (err) {
+    console.log(err);
   }
-
-  // 1. Process the input from the user.
-  // Example input: '/schedule 2020-12-12 Working from home!'
-  const splitText = event.message.text.split(' ');
-  const command = splitText[0];
-  const chosenDate = splitText[1];
-  const task = splitText.splice(2).join(' ');
-
-  console.log(splitText, command, chosenDate, task);
-
-  // 2. If there are any errors, resolve the function.
-  if (command !== '/schedule' || command !== '/tasks') {
-    return Promise.resolve(null);
-  }
-
-  if (isNaN(Date.parse(chosenDate))) {
-    return Promise.resolve(null);
-  }
-
-  // 3. Insert all the given data into the database.
-  const newTask = await Task.create({
-    groupId: roomId,
-    name: task,
-    deadline: new Date(chosenDate),
-  });
-
-  console.log(newTask);
-
-  // 4. Send back response to the user.
-  const response = {
-    type: 'text',
-    message: `Thank you! Your task of '${
-      results.name
-    }' with the deadline being ${
-      new Date(results.deadline).toISOString().split('T')[0]
-    } has been created successfully!`,
-  };
-
-  return client.replyMessage(event.replyToken, response);
 };
 
 mongoose
