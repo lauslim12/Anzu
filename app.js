@@ -31,7 +31,6 @@ const DB = process.env.DATABASE.replace(
 );
 
 // Application Setup.
-exports.client = new line.Client(config);
 const app = express();
 
 mongoose

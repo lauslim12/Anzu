@@ -1,5 +1,13 @@
+const line = require('@line/bot-sdk');
 const Task = require('../models/taskModel');
-const { client } = require('../app');
+
+// Global Variables.
+const config = {
+  channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
+  channelSecret: process.env.CHANNEL_SECRET,
+};
+
+const client = new line.Client(config);
 
 const createResponse = (message) => {
   return {
