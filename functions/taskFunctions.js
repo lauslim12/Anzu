@@ -126,7 +126,7 @@ const leave = async (event) => {
     'Thank you for using me! I will be taking my leave now. Bye-bye!';
   const response = createResponse(message);
 
-  await client.replyMessage(response);
+  await client.replyMessage(event.replyToken, response);
 
   return await client.leaveRoom(roomId);
 };
