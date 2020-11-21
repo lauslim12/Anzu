@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 // Personal Functions.
 // const groupController = require('./functions/groupController');
-const Task = require('../models/taskModel');
+const Task = require('./models/taskModel');
 
 // should be in env
 const config = {
