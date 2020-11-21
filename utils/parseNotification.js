@@ -1,4 +1,4 @@
-module.exports = (element) => {
+module.exports = (element, index) => {
   if (!element) {
     return;
   }
@@ -10,5 +10,5 @@ module.exports = (element) => {
   const differenceInDays = dateDifference.getUTCDate();
   const formattedTime = new Date(element.deadline).toISOString().split('T')[0];
 
-  return `— ${element.name} (Deadline: ${formattedTime} — ${differenceInDays} days)`;
+  return `${index}. ${element.name} (Deadline: ${formattedTime} — ${differenceInDays} days)`;
 };
