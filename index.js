@@ -32,7 +32,7 @@ const app = express();
 
 const parseParams = async (event) => {
   try {
-    const { text } = event.message.text;
+    const { text } = event.message;
 
     if (text.startsWith('/schedule')) {
       if (!event.source.userId !== process.env.ADMIN_USER_ID) {
