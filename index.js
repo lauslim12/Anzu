@@ -37,7 +37,7 @@ const scheduleTask = async (event) => {
     // 1. Process the input from the user.
     // Example input: '/schedule 2020-12-12 Working from home!'
     if (
-      !event.message.text.startsWith('/schedule') ||
+      !event.message.text.startsWith('/schedule') &&
       !event.message.text.startsWith('/tasks')
     ) {
       return Promise.resolve(null);
@@ -48,9 +48,9 @@ const scheduleTask = async (event) => {
     const task = splitText.splice(2).join(' ');
 
     // 2. If there are any errors, resolve the function.
-    // if (isNaN(Date.parse(chosenDate))) {
-    //   return Promise.resolve(null);
-    // }
+    if (isNaN(Date.parse(chosenDate))) {
+      return Promise.resolve(null);
+    }
 
     // 3. Insert all the given data into the database.
     const newTask = await Task.create({
