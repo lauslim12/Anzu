@@ -16,7 +16,7 @@ const featureGuard = async (event) => {
     const response = {
       type: 'text',
       text:
-        'Sorry, Anzu does not accept orders from anyone other than Nicholas Dwiarto. Please ask him instead.',
+        'Sorry, Anzu does not accept data manipulation orders from anyone other than Nicholas Dwiarto. Please ask him instead.',
     };
 
     return await client.replyMessage(event.replyToken, response);
@@ -79,8 +79,8 @@ const getScheduledTasks = async (event) => {
   // 4. Prettify the tasks.
   const taskDeadlines = [];
 
-  tasks.forEach((e) => {
-    taskDeadlines.push(parseNotification(e));
+  tasks.forEach((e, index) => {
+    taskDeadlines.push(parseNotification(e, index + 1));
   });
 
   const message = taskDeadlines.join('\n');
@@ -113,7 +113,7 @@ const deleteScheduledTask = async (event) => {
 const help = async (event) => {
   // 1. Simply send a help message.
   const message =
-    'Anzu is available for the following commands:\n1. (/schedule <deadline> <job_name>) to schedule your tasks\n2. (/tasks) to show all available tasks\n3. (/delete <job_name>) to delete available tasks in this room.';
+    'Anzu is available for the following commands:\n1. (/schedule <deadline> <job_name>) to schedule your tasks\n2. (/tasks) to show all available tasks\n3. (/delete <job_name>) to delete available tasks in this room\n4. (/help) to spawn the help menu';
 
   const response = createResponse(message);
 
@@ -159,7 +159,7 @@ const apiCall = async (event) => {
 
   if (text.includes('Anzu') || text.includes('anzu')) {
     const response = createResponse(
-      "Did you call me? I am Anzu, an open source scheduler chatbot created by Nicholas Dwiarto. My creator probably hasn't open sourced me yet, but I believe he will in a while. Have fun using me and please let me know if you need anything! Use '/help' (without parentheses) to get started!"
+      "Did you call me? I am Anzu, an open source scheduler chatbot created by Nicholas Dwiarto. My creator probably hasn't open sourced me yet, but I believe he will in a while.\n\nHave fun using me and please let me know if you need anything!\n\nUse '/help' (without parentheses) to get started!"
     );
     return client.replyMessage(event.replyToken, response);
   }
