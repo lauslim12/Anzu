@@ -1,5 +1,6 @@
-const line = require('@line/bot-sdk');
 const express = require('express');
+const line = require('@line/bot-sdk');
+const mongoose = require('mongoose');
 
 // should be in env
 const config = {
@@ -8,6 +9,11 @@ const config = {
 };
 
 const PORT = process.env.PORT || 3000;
+const DB = process.env.DATABASE.replace(
+  '<PASSWORD>',
+  process.env.DATABASE_PASSWORD
+);
+
 const client = new line.Client(config);
 const app = express();
 
@@ -24,6 +30,20 @@ async function handleEvent(event) {
   return client.replyMessage(event.replyToken, response);
 }
 
+mongoose
+  .connect(DB, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('MongoDB connection successfull! 🔥');
+  })
+  .catch((err) => {
+    console.log('Error found with code:', err);
+  });
+
 app.get('/', async (req, res) => {
   return res.status(200).json({
     status: 'success',
@@ -33,6 +53,7 @@ app.get('/', async (req, res) => {
 
 app.post('/anzu', line.middleware(config), async (req, res) => {
   try {
+    console.log(req.body.events);
     const results = await Promise.all(req.body.events.map(handleEvent));
 
     return res.status(200).json({
@@ -46,5 +67,5 @@ app.post('/anzu', line.middleware(config), async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Application is live on port ${PORT}!`);
+  console.log(`'Application running on Express.js (Port: ${PORT})! 👍`);
 });
