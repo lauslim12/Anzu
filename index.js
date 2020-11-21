@@ -10,6 +10,7 @@
  */
 
 // Global Imports.
+const cron = require('node-cron');
 const express = require('express');
 const line = require('@line/bot-sdk');
 const mongoose = require('mongoose');
@@ -24,33 +25,41 @@ const config = {
   channelSecret: process.env.CHANNEL_SECRET,
 };
 
+// Global Variables.
 const PORT = process.env.PORT || 3000;
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
   process.env.DATABASE_PASSWORD
 );
 
-const client = new line.Client(config);
+// Application Setup.
 const app = express();
+const client = new line.Client(config);
+
+// Functions.
+const featureGuard = async (event) => {
+  if (event.source.userId !== process.env.ADMIN_USER_ID) {
+    const response = {
+      type: 'text',
+      text:
+        'Sorry, Anzu does not accept orders from anyone other than Nicholas Dwiarto. Please ask him instead.',
+    };
+
+    return client.replyMessage(event.replyToken, response);
+  }
+};
 
 const parseParams = async (event) => {
   try {
     const { text } = event.message;
 
     if (text.startsWith('/schedule')) {
-      if (event.source.userId !== process.env.ADMIN_USER_ID) {
-        const response = {
-          type: 'text',
-          text:
-            'Sorry, Anzu does not accept orders from anyone other than Nicholas Dwiarto. Please ask him instead.',
-        };
-
-        return client.replyMessage(event.replyToken, response);
-      }
+      featureGuard(event);
       return scheduleTask(event);
     } else if (text.startsWith('/tasks')) {
       return getScheduledTasks(event);
     } else if (text.startsWith('/delete')) {
+      featureGuard(event);
       return deleteScheduledTask(event);
     } else if (text.includes('Anzu') || text.includes('anzu')) {
       const response = {
@@ -163,7 +172,8 @@ const getScheduledTasks = async (event) => {
 
 const deleteScheduledTask = async (event) => {
   // 1. Fetch the name of the task.
-  const taskName = event.message.text.split(' ')[1];
+  const taskString = event.message.text.split(' ');
+  const taskName = taskString.splice(1).join(' ');
 
   // 2. Delete the task.
   await Task.deleteOne({ name: taskName });
