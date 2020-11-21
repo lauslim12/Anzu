@@ -4,6 +4,9 @@
  * 2. Make it so the functions are more modular.
  * 3. The 'startsWith' function call is still dirty.
  * 4. Upgrade to TypeScript for easier maintenance.
+ * 5. Scheduler (routine cleanup and announcement).
+ * 6. Group and Room ID.
+ * 7. No duplicate tasks.
  */
 
 // Global Imports.
@@ -35,7 +38,7 @@ const parseParams = async (event) => {
     const { text } = event.message;
 
     if (text.startsWith('/schedule')) {
-      if (!event.source.userId !== process.env.ADMIN_USER_ID) {
+      if (event.source.userId !== process.env.ADMIN_USER_ID) {
         const response = {
           type: 'text',
           text:
@@ -47,6 +50,18 @@ const parseParams = async (event) => {
       return scheduleTask(event);
     } else if (text.startsWith('/tasks')) {
       return getScheduledTasks(event);
+    } else if (text.startsWith('/delete')) {
+      return deleteScheduledTask(event);
+    } else if (text.includes('Anzu') || text.includes('anzu')) {
+      const response = {
+        type: 'text',
+        text:
+          "Did you call me? I am Anzu, an open source scheduler chatbot created by Nicholas Dwiarto. My creator probably hasn't open sourced me yet, but I belive he will in a while. Have fun using me and please let me know if you need anything!",
+      };
+
+      return client.replyMessage(event.replyToken, response);
+    } else {
+      return Promise.resolve(null);
     }
   } catch (err) {
     console.log(err);
@@ -109,7 +124,7 @@ const parseNotification = (e) => {
   const differenceInDays = deadline - currentTime;
   const formattedTime = new Date(e.deadline).toISOString().split('T')[0];
 
-  return `${e.name} (Deadline: ${formattedTime} — ${differenceInDays} days)`;
+  return `— ${e.name} (Deadline: ${formattedTime} — ${differenceInDays} days)`;
 };
 
 const getScheduledTasks = async (event) => {
@@ -137,13 +152,29 @@ const getScheduledTasks = async (event) => {
     // 5. Send response back to the user.
     const response = {
       type: 'text',
-      text: `Hello everyone! Anzu is here to remind you all of your schedules. Here is it:\n${message}\nGood luck and stay in high spirits!`,
+      text: `Hello everyone! Anzu is here to remind you all of your schedules. Here is it:\n\n${message}\n\nGood luck and stay in high spirits!`,
     };
 
     return client.replyMessage(event.replyToken, response);
   } catch (err) {
     console.log(err);
   }
+};
+
+const deleteScheduledTask = async (event) => {
+  // 1. Fetch the name of the task.
+  const taskName = event.message.text.split(' ')[1];
+
+  // 2. Delete the task.
+  await Task.deleteOne({ name: taskName });
+
+  // 3. Send response to the user.
+  const response = {
+    type: 'text',
+    text: `Task with the name ${taskName} has been deleted!`,
+  };
+
+  return client.replyMessage(event.replyToken, response);
 };
 
 mongoose
