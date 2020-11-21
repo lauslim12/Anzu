@@ -1,6 +1,11 @@
+// Global Imports.
 const express = require('express');
 const line = require('@line/bot-sdk');
 const mongoose = require('mongoose');
+
+// Personal Functions.
+// const groupController = require('./functions/groupController');
+const Task = require('../models/taskModel');
 
 // should be in env
 const config = {
@@ -17,18 +22,53 @@ const DB = process.env.DATABASE.replace(
 const client = new line.Client(config);
 const app = express();
 
-async function handleEvent(event) {
+const scheduleTask = async (event) => {
+  // Check for all variables.
+  const { roomId } = event.source;
+
+  // 0. Check if invalid input, Anzu does not need to respond.
   if (event.type !== 'message' || event.message.type !== 'text') {
     return Promise.resolve(null);
   }
 
+  // 1. Process the input from the user.
+  // Example input: '/schedule 2020-12-12 Working from home!'
+  const splitText = event.message.text.split(' ');
+  const command = splitText[0];
+  const chosenDate = splitText[1];
+  const task = splitText.splice(2).join(' ');
+
+  // 2. If there are any errors, resolve the function.
+  if (command !== '/schedule' || command !== '/tasks') {
+    return Promise.resolve(null);
+  }
+
+  if (isNaN(Date.parse(chosenDate))) {
+    return Promise.resolve(null);
+  }
+
+  // 3. Insert all the given data into the database.
+  const newTask = await Task.create({
+    groupId: roomId,
+    name: task,
+    deadline: new Date(chosenDate),
+  });
+
+  // 4. Send back response to the user.
   const response = {
     type: 'text',
-    text: 'Hello! Anzu is saying hello world to you!',
+    message: `Thank you! Your task of '${
+      results.name
+    }' with the deadline being ${
+      new Date(results.deadline).toISOString().split('T')[0]
+    } has been created successfully!`,
   };
 
-  return client.replyMessage(event.replyToken, response);
-}
+  client.replyMessage(event.replyToken, response);
+
+  // 5. Return the newly created task.
+  return newTask;
+};
 
 mongoose
   .connect(DB, {
@@ -53,10 +93,11 @@ app.get('/', async (req, res) => {
 
 app.post('/anzu', line.middleware(config), async (req, res) => {
   try {
-    console.log(req.body.events);
-    const results = await Promise.all(req.body.events.map(handleEvent));
+    // 1. Process the input in 'scheduleTask' function.
+    const results = await Promise.all(req.body.events.map(scheduleTask));
 
-    return res.status(200).json({
+    // 2. Get the results.
+    res.status(200).json({
       status: 'success',
       data: results,
     });
@@ -67,5 +108,5 @@ app.post('/anzu', line.middleware(config), async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`'Application running on Express.js (Port: ${PORT})! 👍`);
+  console.log(`Application running on Express.js (Port: ${PORT})! 👍`);
 });
