@@ -109,7 +109,7 @@ const parseNotification = (e) => {
   const differenceInDays = deadline - currentTime;
   const formattedTime = new Date(e.deadline).toISOString().split('T')[0];
 
-  return `${e.task} (Deadline: ${formattedTime} — ${differenceInDays} days)`;
+  return `${e.name} (Deadline: ${formattedTime} — ${differenceInDays} days)`;
 };
 
 const getScheduledTasks = async (event) => {
