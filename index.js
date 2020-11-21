@@ -24,6 +24,13 @@ async function handleEvent(event) {
   return client.replyMessage(event.replyToken, response);
 }
 
+app.get('/', async (req, res) => {
+  return res.status(200).json({
+    status: 'success',
+    message: 'Connected successfully!',
+  });
+});
+
 app.post('/anzu', line.middleware(config), async (req, res) => {
   try {
     const results = await Promise.all(req.body.events.map(handleEvent));
