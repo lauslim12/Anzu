@@ -24,6 +24,8 @@ const app = express();
 
 const scheduleTask = async (event) => {
   try {
+    console.log(event);
+
     // Check for all variables.
     const { roomId } = event.source;
 
