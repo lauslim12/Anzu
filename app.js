@@ -41,10 +41,14 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
+    /* eslint-disable no-console */
     console.log('MongoDB connection successfull! 🔥');
+    /* eslint-enable no-console */
   })
   .catch((err) => {
+    /* eslint-disable no-console */
     console.log('Error found with code:', err);
+    /* eslint-enable no-console */
   });
 
 app.get('/', async (req, res) => {
@@ -66,14 +70,16 @@ app.post('/anzu', line.middleware(config), async (req, res) => {
       status: 'success',
       result,
     });
-  } catch (err) {
+  } catch (error) {
     return res.status(500).json({
       status: 'success',
-      error: err,
+      error,
     });
   }
 });
 
 app.listen(PORT, () => {
+  /* eslint-disable no-console */
   console.log(`Application running on Express.js (Port: ${PORT})! 👍`);
+  /* eslint-enable no-console */
 });
