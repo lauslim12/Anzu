@@ -62,7 +62,7 @@ const scheduleTask = async (event) => {
     // 4. Send back response to the user.
     const response = {
       type: 'text',
-      message: `Thank you! Your task of '${task}' with the deadline being ${
+      text: `Thank you! Your task of '${task}' with the deadline being ${
         new Date(chosenDate).toISOString().split('T')[0]
       } has been created successfully!`,
     };
