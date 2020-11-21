@@ -38,6 +38,8 @@ const scheduleTask = async (event) => {
   const chosenDate = splitText[1];
   const task = splitText.splice(2).join(' ');
 
+  console.log(splitText, command, chosenDate, task);
+
   // 2. If there are any errors, resolve the function.
   if (command !== '/schedule' || command !== '/tasks') {
     return Promise.resolve(null);
@@ -54,6 +56,8 @@ const scheduleTask = async (event) => {
     deadline: new Date(chosenDate),
   });
 
+  console.log(newTask);
+
   // 4. Send back response to the user.
   const response = {
     type: 'text',
@@ -64,10 +68,7 @@ const scheduleTask = async (event) => {
     } has been created successfully!`,
   };
 
-  client.replyMessage(event.replyToken, response);
-
-  // 5. Return the newly created task.
-  return newTask;
+  return client.replyMessage(event.replyToken, response);
 };
 
 mongoose
