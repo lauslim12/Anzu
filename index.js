@@ -41,16 +41,14 @@ const scheduleTask = async (event) => {
     const chosenDate = splitText[1];
     const task = splitText.splice(2).join(' ');
 
-    console.log(splitText, command, chosenDate, task);
-
     // 2. If there are any errors, resolve the function.
-    if (command !== '/schedule' || command !== '/tasks') {
-      return Promise.resolve(null);
-    }
+    // if (command !== '/schedule' || command !== '/tasks') {
+    //   return Promise.resolve(null);
+    // }
 
-    if (isNaN(Date.parse(chosenDate))) {
-      return Promise.resolve(null);
-    }
+    // if (isNaN(Date.parse(chosenDate))) {
+    //   return Promise.resolve(null);
+    // }
 
     // 3. Insert all the given data into the database.
     // const newTask = await Task.create({
@@ -96,20 +94,14 @@ app.get('/', async (req, res) => {
   });
 });
 
-app.post('/anzu', line.middleware(config), async (req, res) => {
-  try {
-    // 1. Process the input in 'scheduleTask' function.
-    const results = await Promise.all(req.body.events.map(scheduleTask));
-
-    // 2. Get the results.
-    res.status(200).json({
-      status: 'success',
-      data: results,
+app.post('/anzu', line.middleware(config), (req, res) => {
+  // 1. Process the input in 'scheduleTask' function.
+  Promise.all(req.body.events.map(scheduleTask))
+    .then((result) => res.status(200).json(result))
+    .catch((err) => {
+      console.error(err);
+      res.status(500).end();
     });
-  } catch (e) {
-    console.log(e);
-    res.status(500).end();
-  }
 });
 
 app.listen(PORT, () => {
