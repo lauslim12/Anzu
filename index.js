@@ -51,21 +51,19 @@ const scheduleTask = async (event) => {
     }
 
     // 3. Insert all the given data into the database.
-    const newTask = await Task.create({
-      groupId: roomId,
-      name: task,
-      deadline: new Date(chosenDate),
-    });
+    // const newTask = await Task.create({
+    //   groupId: roomId,
+    //   name: task,
+    //   deadline: new Date(chosenDate),
+    // });
 
-    console.log(newTask);
+    // console.log(newTask);
 
     // 4. Send back response to the user.
     const response = {
       type: 'text',
-      message: `Thank you! Your task of '${
-        results.name
-      }' with the deadline being ${
-        new Date(results.deadline).toISOString().split('T')[0]
+      message: `Thank you! Your task of '${task}' with the deadline being ${
+        new Date(chosenDate).toISOString().split('T')[0]
       } has been created successfully!`,
     };
 
