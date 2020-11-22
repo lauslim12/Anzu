@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
-  groupId: {
+  sourceId: {
     type: String,
-    ref: 'Group',
     required: [true, 'A task must be assigned to a group!'],
   },
   name: {
@@ -13,6 +12,10 @@ const taskSchema = new mongoose.Schema({
   deadline: {
     type: Date,
     required: [true, 'A task must have a deadline!'],
+  },
+  scheduler: {
+    type: String,
+    required: [true, 'A task must have a person who is the scheduler!'],
   },
 });
 
