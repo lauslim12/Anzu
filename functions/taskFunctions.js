@@ -1,7 +1,7 @@
 const line = require('@line/bot-sdk');
-const Task = require('../models/taskModel');
 const createResponse = require('../utils/createResponse');
 const parseNotification = require('../utils/parseNotification');
+const Task = require('../models/taskModel');
 
 // Global Variables.
 const config = {
@@ -19,13 +19,31 @@ const featureGuard = async (event) => {
         'Sorry, Anzu does not accept data manipulation orders from anyone other than Nicholas Dwiarto. Please ask him instead.',
     };
 
-    return await client.replyMessage(event.replyToken, response);
+    await client.replyMessage(event.replyToken, response);
+
+    throw new Error('Unauthorized user!');
   }
+};
+
+const getSourceId = (event) => {
+  let sourceId;
+
+  // 1. Parse the source object.
+  if (event.source.type === 'group') {
+    sourceId = event.source.groupId;
+  } else if (event.source.type === 'room') {
+    sourceId = event.source.roomId;
+  } else {
+    sourceId = event.source.userId;
+  }
+
+  return sourceId;
 };
 
 const scheduleTask = async (event) => {
   // Check for all variables.
-  const { roomId } = event.source;
+  const sourceId = getSourceId(event);
+  const userId = event.source.userId || 'no id';
 
   // 0. Check if invalid input, Anzu does not need to respond.
   if (event.type !== 'message' || event.message.type !== 'text') {
@@ -34,9 +52,9 @@ const scheduleTask = async (event) => {
 
   // 1. Process the input from the user.
   // Example input: '/schedule 2020-12-12 Working from home!'
-  if (!event.message.text.startsWith('/schedule')) {
-    return Promise.resolve(null);
-  }
+  // if (!event.message.text.startsWith('/schedule')) {
+  //   return Promise.resolve(null);
+  // }
 
   const splitText = event.message.text.split(' ');
   const chosenDate = splitText[1];
@@ -49,9 +67,10 @@ const scheduleTask = async (event) => {
 
   // 3. Insert all the given data into the database.
   await Task.create({
-    groupId: roomId,
+    sourceId: sourceId,
     name: task,
     deadline: new Date(chosenDate),
+    scheduler: userId,
   });
 
   // 4. Send back response to the user.
@@ -66,7 +85,7 @@ const scheduleTask = async (event) => {
 
 const getScheduledTasks = async (event) => {
   // 1. Get the current room ID.
-  const { roomId } = event.source;
+  const sourceId = getSourceId(event);
 
   // 2. Check for input.
   if (!event.message.text.startsWith('/tasks')) {
@@ -74,7 +93,7 @@ const getScheduledTasks = async (event) => {
   }
 
   // 3. Fetch all the available tasks for the current room.
-  const tasks = await Task.find({ groupId: roomId });
+  const tasks = await Task.find({ sourceId: sourceId });
 
   // 4. Prettify the tasks.
   const taskDeadlines = [];
@@ -122,6 +141,7 @@ const help = async (event) => {
 
 const leave = async (event) => {
   const { roomId } = event.source;
+
   const message =
     'Thank you for using me! I will be taking my leave now. Bye-bye!';
   const response = createResponse(message);
@@ -134,34 +154,39 @@ const leave = async (event) => {
 const apiCall = async (event) => {
   const { text } = event.message;
 
-  if (text.startsWith('/schedule')) {
-    featureGuard(event);
-    return scheduleTask(event);
-  }
+  try {
+    if (text.startsWith('/schedule')) {
+      await featureGuard(event);
+      return scheduleTask(event);
+    }
 
-  if (text.startsWith('/tasks')) {
-    return getScheduledTasks(event);
-  }
+    if (text.startsWith('/tasks')) {
+      return getScheduledTasks(event);
+    }
 
-  if (text.startsWith('/delete')) {
-    featureGuard(event);
-    return deleteScheduledTask(event);
-  }
+    if (text.startsWith('/delete')) {
+      await featureGuard(event);
+      return deleteScheduledTask(event);
+    }
 
-  if (text.startsWith('/help')) {
-    return help(event);
-  }
+    if (text.startsWith('/help')) {
+      return help(event);
+    }
 
-  if (text.startsWith('/leave')) {
-    featureGuard(event);
-    return leave(event);
-  }
+    if (text.startsWith('/leave')) {
+      await featureGuard(event);
+      return leave(event);
+    }
 
-  if (text.includes('Anzu') || text.includes('anzu')) {
-    const response = createResponse(
-      "Did you call me? I am Anzu, an open source scheduler chatbot created by Nicholas Dwiarto. My creator probably hasn't open sourced me yet, but I believe he will in a while.\n\nHave fun using me and please let me know if you need anything!\n\nUse '/help' (without parentheses) to get started!"
-    );
-    return client.replyMessage(event.replyToken, response);
+    if (text.includes('Anzu') || text.includes('anzu')) {
+      const response = createResponse(
+        "Did you call me? I am Anzu, an open source scheduler chatbot created by Nicholas Dwiarto. My creator probably hasn't open sourced me yet, but I believe he will in a while.\n\nHave fun using me and please let me know if you need anything!\n\nUse '/help' (without parentheses) to get started!"
+      );
+
+      return await client.replyMessage(event.replyToken, response);
+    }
+  } catch (err) {
+    console.error(err);
   }
 
   return Promise.resolve(null);

@@ -4,15 +4,14 @@ const parseNotification = require('../utils/parseNotification');
 const Task = require('../models/taskModel');
 
 exports.reminder = async () => {
-  // 1. Get all distinct 'groupIds'. Will return an array filled with 'groupId'.
-  const groupIds = await Task.find({}, 'groupId').distinct('groupId');
+  // 1. Get all distinct 'sourceIds'. Will return an array filled with 'sourceId'.
+  const sourceIds = await Task.find({}, 'sourceId').distinct('sourceId');
 
   // 2. Send a push message that reminds them of their schedules.
-  console.log(groupIds);
   await Promise.all(
-    groupIds.forEach(async (id) => {
+    sourceIds.forEach(async (id) => {
       // 1. Call the tasks for the group.
-      const tasks = await Task.find({ groupId: id });
+      const tasks = await Task.find({ sourceIds: id });
 
       // 2. Process them as a string to be sent.
       const taskDeadlines = [];
