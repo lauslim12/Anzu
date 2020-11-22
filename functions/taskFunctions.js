@@ -1,15 +1,8 @@
-const line = require('@line/bot-sdk');
+const adminFunctions = require('../functions/adminFunctions');
+const { client } = require('../utils/credentialHandler');
 const createResponse = require('../utils/createResponse');
 const parseNotification = require('../utils/parseNotification');
 const Task = require('../models/taskModel');
-
-// Global Variables.
-const config = {
-  channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
-  channelSecret: process.env.CHANNEL_SECRET,
-};
-
-const client = new line.Client(config);
 
 const featureGuard = async (event) => {
   if (event.source.userId !== process.env.ADMIN_USER_ID) {
@@ -27,6 +20,7 @@ const featureGuard = async (event) => {
 
 const getSourceId = (event) => {
   let sourceId;
+  const type = event.source.type || 'user';
 
   // 1. Parse the source object.
   if (event.source.type === 'group') {
@@ -37,25 +31,19 @@ const getSourceId = (event) => {
     sourceId = event.source.userId;
   }
 
-  return sourceId;
+  return {
+    sourceId,
+    type,
+  };
 };
 
 const scheduleTask = async (event) => {
   // Check for all variables.
-  const sourceId = getSourceId(event);
+  const { sourceId, type } = getSourceId(event);
   const userId = event.source.userId || 'no id';
-
-  // 0. Check if invalid input, Anzu does not need to respond.
-  if (event.type !== 'message' || event.message.type !== 'text') {
-    return Promise.resolve(null);
-  }
 
   // 1. Process the input from the user.
   // Example input: '/schedule 2020-12-12 Working from home!'
-  // if (!event.message.text.startsWith('/schedule')) {
-  //   return Promise.resolve(null);
-  // }
-
   const splitText = event.message.text.split(' ');
   const chosenDate = splitText[1];
   const task = splitText.splice(2).join(' ');
@@ -71,6 +59,7 @@ const scheduleTask = async (event) => {
     name: task,
     deadline: new Date(chosenDate),
     scheduler: userId,
+    sourceType: type,
   });
 
   // 4. Send back response to the user.
@@ -80,22 +69,17 @@ const scheduleTask = async (event) => {
     } has been created successfully!`
   );
 
-  return await client.replyMessage(event.replyToken, response);
+  await client.replyMessage(event.replyToken, response);
 };
 
 const getScheduledTasks = async (event) => {
   // 1. Get the current room ID.
-  const sourceId = getSourceId(event);
+  const { sourceId } = getSourceId(event);
 
-  // 2. Check for input.
-  if (!event.message.text.startsWith('/tasks')) {
-    return Promise.resolve(null);
-  }
-
-  // 3. Fetch all the available tasks for the current room.
+  // 2. Fetch all the available tasks for the current room.
   const tasks = await Task.find({ sourceId: sourceId });
 
-  // 4. Prettify the tasks.
+  // 3. Prettify the tasks.
   const taskDeadlines = [];
 
   tasks.forEach((e, index) => {
@@ -104,12 +88,12 @@ const getScheduledTasks = async (event) => {
 
   const message = taskDeadlines.join('\n');
 
-  // 5. Send response back to the user.
+  // 4. Send response back to the user.
   const response = createResponse(
     `Hello everyone! Anzu is here to remind you all of your schedules. Here is it:\n\n${message}\n\nGood luck and stay in high spirits!`
   );
 
-  return await client.replyMessage(event.replyToken, response);
+  await client.replyMessage(event.replyToken, response);
 };
 
 const deleteScheduledTask = async (event) => {
@@ -126,7 +110,7 @@ const deleteScheduledTask = async (event) => {
     text: `Task with the name ${taskName} has been deleted!`,
   };
 
-  return await client.replyMessage(event.replyToken, response);
+  await client.replyMessage(event.replyToken, response);
 };
 
 const help = async (event) => {
@@ -136,11 +120,11 @@ const help = async (event) => {
 
   const response = createResponse(message);
 
-  return await client.replyMessage(event.replyToken, response);
+  await client.replyMessage(event.replyToken, response);
 };
 
 const leave = async (event) => {
-  const { roomId } = event.source;
+  const { sourceId, type } = event.source;
 
   const message =
     'Thank you for using me! I will be taking my leave now. Bye-bye!';
@@ -148,11 +132,20 @@ const leave = async (event) => {
 
   await client.replyMessage(event.replyToken, response);
 
-  return await client.leaveRoom(roomId);
+  if (type === 'room') {
+    return await client.leaveRoom(sourceId);
+  }
+
+  await client.leaveGroup(sourceId);
 };
 
 const apiCall = async (event) => {
   const { text } = event.message;
+
+  // 0. Check if invalid input, Anzu does not need to respond.
+  if (event.type !== 'message' || event.message.type !== 'text') {
+    return Promise.resolve(null);
+  }
 
   try {
     if (text.startsWith('/schedule')) {
@@ -184,6 +177,11 @@ const apiCall = async (event) => {
       );
 
       return await client.replyMessage(event.replyToken, response);
+    }
+
+    if (text.startsWith('System Call: Purge')) {
+      await featureGuard(event);
+      return adminFunctions.purge(event);
     }
   } catch (err) {
     console.error(err);

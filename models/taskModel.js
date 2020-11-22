@@ -17,6 +17,11 @@ const taskSchema = new mongoose.Schema({
     type: String,
     required: [true, 'A task must have a person who is the scheduler!'],
   },
+  sourceType: {
+    type: String,
+    enum: ['group', 'room', 'user', 'none'],
+    default: 'none',
+  },
 });
 
 const Task = mongoose.model('Task', taskSchema);
