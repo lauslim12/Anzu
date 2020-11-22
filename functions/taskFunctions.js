@@ -93,7 +93,7 @@ const getScheduledTasks = async (event) => {
     taskDeadlines.push(parseNotification(e, index + 1));
   });
 
-  if (!tasks) {
+  if (tasks.length <= 0) {
     message = 'You have no tasks due!';
   } else {
     message = taskDeadlines.join('\n');
