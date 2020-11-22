@@ -73,22 +73,33 @@ const scheduleTask = async (event) => {
 };
 
 const getScheduledTasks = async (event) => {
+  // Prepare message to reply with.
+  let message;
+
   // 1. Get the current room ID.
   const { sourceId } = getSourceId(event);
 
   // 2. Fetch all the available tasks for the current room.
   const tasks = await Task.find({ sourceId: sourceId });
 
-  // 3. Prettify the tasks.
+  // 3. Sort the tasks based on date for easier reading.
+  // Sort from the closest deadline to the furthest deadline!
+  tasks.sort((el1, el2) => new Date(el1.deadline) - new Date(el2.deadline));
+
+  // 4. Prettify the tasks.
   const taskDeadlines = [];
 
   tasks.forEach((e, index) => {
     taskDeadlines.push(parseNotification(e, index + 1));
   });
 
-  const message = taskDeadlines.join('\n');
+  if (!tasks) {
+    message = 'You have no tasks due!';
+  } else {
+    message = taskDeadlines.join('\n');
+  }
 
-  // 4. Send response back to the user.
+  // 5. Send response back to the user.
   const response = createResponse(
     `Hello everyone! Anzu is here to remind you all of your schedules. Here is it:\n\n${message}\n\nGood luck and stay in high spirits!`
   );
@@ -116,7 +127,7 @@ const deleteScheduledTask = async (event) => {
 const help = async (event) => {
   // 1. Simply send a help message.
   const message =
-    'Anzu is available for the following commands:\n1. (/schedule <deadline> <job_name>) to schedule your tasks\n2. (/tasks) to show all available tasks\n3. (/delete <job_name>) to delete available tasks in this room\n4. (/help) to spawn the help menu';
+    'Anzu is available for the following commands:\n1. (/schedule <deadline> <job_name>) to schedule your tasks\n2. (/tasks) to show all available tasks\n3. (/delete <job_name>) to delete available tasks in this room\n4. (/help) to spawn the help menu\n5. (/leave) to make me leave (if on a group or multi-chat environment)';
 
   const response = createResponse(message);
 
@@ -124,7 +135,14 @@ const help = async (event) => {
 };
 
 const leave = async (event) => {
-  const { sourceId, type } = event.source;
+  const { sourceId, type } = getSourceId(event);
+
+  if (type !== 'room' && type !== 'group') {
+    const message = 'Sorry, but you cannot kick me out from personal chats.';
+    const response = createResponse(message);
+
+    return await client.replyMessage(event.replyToken, response);
+  }
 
   const message =
     'Thank you for using me! I will be taking my leave now. Bye-bye!';
@@ -132,6 +150,7 @@ const leave = async (event) => {
 
   await client.replyMessage(event.replyToken, response);
 
+  // If Anzu is located in a room or a group, leave.
   if (type === 'room') {
     return await client.leaveRoom(sourceId);
   }

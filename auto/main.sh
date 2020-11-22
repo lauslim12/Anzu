@@ -1,6 +1,6 @@
 #!/bin/bash
 # Parsing variables.
-LINK_TO_WEBSERVER = $1
+LINK_TO_WEBSERVER=$1
 
 # Keep up with the repository.
 git pull origin master
