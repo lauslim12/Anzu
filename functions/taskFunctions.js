@@ -1,3 +1,4 @@
+const AppError = require('../utils/appError');
 const { client } = require('../utils/credentialHandler');
 const createResponse = require('../utils/createResponse');
 const getSourceId = require('../utils/getSourceId');
@@ -17,7 +18,11 @@ exports.scheduleTask = async (event) => {
 
   // 2. If there are any errors, resolve the function.
   if (Number.isNaN(Date.parse(chosenDate))) {
-    return Promise.resolve(null);
+    throw new AppError(
+      'Invalid date! Please enter date in YYYY-MM-DD format!',
+      400,
+      event
+    );
   }
 
   // 3. Insert all the given data into the database.

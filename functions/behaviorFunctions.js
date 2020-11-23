@@ -1,3 +1,4 @@
+const AppError = require('../utils/appError');
 const { client } = require('../utils/credentialHandler');
 const createResponse = require('../utils/createResponse');
 const getSourceId = require('../utils/getSourceId');
@@ -24,10 +25,11 @@ exports.leave = async (event) => {
   const { sourceId, type } = getSourceId(event);
 
   if (type !== 'room' && type !== 'group') {
-    const message = 'Sorry, but you cannot kick me out from personal chats.';
-    const response = createResponse(message);
-
-    return await client.replyMessage(event.replyToken, response);
+    throw new AppError(
+      'Sorry, but you cannot kick me out from personal chats.',
+      400,
+      event
+    );
   }
 
   const message =

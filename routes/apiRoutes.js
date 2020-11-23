@@ -1,6 +1,7 @@
 const adminFunctions = require('../functions/adminFunctions');
 const behaviorFunctions = require('../functions/behaviorFunctions');
 const { client } = require('../utils/credentialHandler');
+const errorFunctions = require('../functions/errorFunctions');
 const taskFunctions = require('../functions/taskFunctions');
 
 const featureGuard = async (event) => {
@@ -28,37 +29,41 @@ const apiCall = async (event) => {
   try {
     if (text.startsWith('/schedule')) {
       await featureGuard(event);
-      return taskFunctions.scheduleTask(event);
+      await taskFunctions.scheduleTask(event);
     }
 
     if (text.startsWith('/tasks')) {
-      return taskFunctions.getScheduledTasks(event);
+      await taskFunctions.getScheduledTasks(event);
     }
 
     if (text.startsWith('/delete')) {
       await featureGuard(event);
-      return taskFunctions.deleteScheduledTask(event);
+      await taskFunctions.deleteScheduledTask(event);
     }
 
     if (text.startsWith('/help')) {
-      return taskFunctions.help(event);
+      await taskFunctions.help(event);
     }
 
     if (text.startsWith('/leave')) {
       await featureGuard(event);
-      return taskFunctions.leave(event);
+      await taskFunctions.leave(event);
     }
 
     if (text.includes('Anzu') || text.includes('anzu')) {
-      return behaviorFunctions.anzuSpeaks();
+      await behaviorFunctions.anzuSpeaks();
     }
 
     if (text.startsWith('System Call: Purge')) {
       await featureGuard(event);
-      return adminFunctions.purge(event);
+      await adminFunctions.purge(event);
     }
   } catch (err) {
-    console.error(err);
+    await errorFunctions(err);
+
+    /* eslint-disable no-console */
+    console.error(err.message);
+    /* eslint-enable no-console */
   }
 
   return Promise.resolve(null);
