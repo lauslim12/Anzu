@@ -2,7 +2,7 @@
 const express = require('express');
 
 // Personal Functions.
-const apiCall = require('./functions/taskFunctions');
+const apiRoutes = require('./routes/apiRoutes');
 const { lineMiddleware } = require('./utils/credentialHandler');
 
 // Application Setup.
@@ -21,7 +21,7 @@ app.post('/anzu', lineMiddleware, async (req, res) => {
 
   try {
     const result = await Promise.all(
-      requestEvents.map(async (event) => await apiCall(event))
+      requestEvents.map(async (event) => await apiRoutes(event))
     );
 
     return res.status(200).json({
