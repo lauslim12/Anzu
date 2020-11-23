@@ -2,6 +2,9 @@
 // Third party imports.
 const mongoose = require('mongoose');
 
+// Personal Functions.
+const scheduleFunctions = require('./functions/scheduleFunctions');
+
 // Handle uncaught exceptions. Happens synchronously!
 process.on('uncaughtException', (err) => {
   console.log('Unhandled exception 💥! Application shutting down!');
@@ -18,6 +21,10 @@ const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
   process.env.DATABASE_PASSWORD
 );
+
+// CRON Setup.
+scheduleFunctions.initializeCron();
+console.log('Cronjobs setup successfully!');
 
 // Database Connection.
 mongoose

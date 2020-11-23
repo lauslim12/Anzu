@@ -1,9 +1,10 @@
+const cron = require('node-cron');
 const { client } = require('../utils/credentialHandler');
 const createResponse = require('../utils/createResponse');
 const parseNotification = require('../utils/parseNotification');
 const Task = require('../models/taskModel');
 
-exports.reminder = async () => {
+const reminder = async () => {
   // 1. Get all distinct 'sourceIds'. Will return an array filled with 'sourceId'.
   const sourceIds = await Task.find({}, 'sourceId').distinct('sourceId');
 
@@ -33,7 +34,7 @@ exports.reminder = async () => {
   );
 };
 
-exports.cleanUpExpiredSchedules = async () => {
+const cleanUpExpiredSchedules = async () => {
   // 1. Get current date.
   const currentDate = new Date(Date.now());
 
@@ -72,4 +73,38 @@ exports.cleanUpExpiredSchedules = async () => {
 
   // 3. Delete every tasks that have expired.
   await Task.deleteMany({ deadline: { $lt: currentDate } });
+};
+
+exports.initializeCron = () => {
+  const settings = {
+    scheduled: true,
+    timezone: 'Asia/Jakarta',
+  };
+
+  // Every day, at 02:00, delete every expired schedules.
+  cron.schedule(
+    '00 02 * * *',
+    async () => {
+      await cleanUpExpiredSchedules();
+    },
+    settings
+  );
+
+  // Every day, at 08:00, send a reminder to the groups that Anzu is in.
+  cron.schedule(
+    '00 08 * * *',
+    async () => {
+      await reminder();
+    },
+    settings
+  );
+
+  // Every day, at 17:00, send a reminder to the groups that Anzu is in.
+  cron.schedule(
+    '00 17 * * *',
+    async () => {
+      await reminder();
+    },
+    settings
+  );
 };
