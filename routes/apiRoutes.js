@@ -1,22 +1,8 @@
 const adminFunctions = require('../functions/adminFunctions');
 const behaviorFunctions = require('../functions/behaviorFunctions');
-const { client } = require('../utils/credentialHandler');
 const errorFunctions = require('../functions/errorFunctions');
+const featureGuard = require('../utils/featureGuard');
 const taskFunctions = require('../functions/taskFunctions');
-
-const featureGuard = async (event) => {
-  if (event.source.userId !== process.env.ADMIN_USER_ID) {
-    const response = {
-      type: 'text',
-      text:
-        'Sorry, Anzu does not accept data manipulation orders from anyone other than Nicholas Dwiarto. Please ask him instead.',
-    };
-
-    await client.replyMessage(event.replyToken, response);
-
-    throw new Error('Unauthorized user!');
-  }
-};
 
 const apiCall = async (event) => {
   const { text } = event.message;
@@ -28,7 +14,7 @@ const apiCall = async (event) => {
 
   try {
     if (text.startsWith('/schedule')) {
-      await featureGuard(event);
+      featureGuard(event);
       await taskFunctions.scheduleTask(event);
     }
 
@@ -37,7 +23,7 @@ const apiCall = async (event) => {
     }
 
     if (text.startsWith('/delete')) {
-      await featureGuard(event);
+      featureGuard(event);
       await taskFunctions.deleteScheduledTask(event);
     }
 
@@ -46,17 +32,22 @@ const apiCall = async (event) => {
     }
 
     if (text.startsWith('/leave')) {
-      await featureGuard(event);
-      await taskFunctions.leave(event);
+      featureGuard(event);
+      await behaviorFunctions.leave(event);
     }
 
     if (text.includes('Anzu') || text.includes('anzu')) {
-      await behaviorFunctions.anzuSpeaks();
+      await behaviorFunctions.anzuSpeaks(event);
     }
 
     if (text.startsWith('System Call: Purge')) {
-      await featureGuard(event);
+      featureGuard(event);
       await adminFunctions.purge(event);
+    }
+
+    if (text.startsWith('System Call: Administrator')) {
+      featureGuard(event);
+      await adminFunctions.administrator(event);
     }
   } catch (err) {
     await errorFunctions(err);

@@ -25,6 +25,14 @@ exports.scheduleTask = async (event) => {
     );
   }
 
+  if (chosenDate < new Date(Date.now())) {
+    throw new AppError(
+      'You can only assign a task whose deadline is today or greater than today!',
+      400,
+      event
+    );
+  }
+
   // 3. Insert all the given data into the database.
   await Task.create({
     sourceId: sourceId,
