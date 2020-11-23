@@ -37,6 +37,39 @@ exports.cleanUpExpiredSchedules = async () => {
   // 1. Get current date.
   const currentDate = new Date(Date.now());
 
-  // 2. Delete every tasks that have expired.
+  // 2. Notify everyone about the tasks that are deleted.
+  const sourceIds = await Task.find({}, 'sourceId sourceType').distinct(
+    'sourceId'
+  );
+
+  await Promise.all(
+    sourceIds.map(async (id) => {
+      // 1. Get all tasks that are about to be deleted.
+      const deadlines = await Task.find({
+        sourceId: id,
+        deadline: { $lt: currentDate },
+      });
+
+      // 2. Parse notification for every tasks to be deleted.
+      const tasksToBeNotified = [];
+
+      deadlines.forEach((e, index) => {
+        tasksToBeNotified.push(parseNotification(e, index + 1, 'cleaning up'));
+      });
+
+      // It is impossible to get no tasks for an existing sourceId.
+      const message = tasksToBeNotified.join('\n');
+
+      // 3. Create response.
+      const response = createResponse(
+        `Hello everyone! Did you sleep well? Anzu just wants to let you know that she has cleaned up several expired tasks. Here is it:\n\n${message}\n\nThank you and good luck!`
+      );
+
+      // 4. Send response.
+      await client.pushMessage(id, response);
+    })
+  );
+
+  // 3. Delete every tasks that have expired.
   await Task.deleteMany({ deadline: { $lt: currentDate } });
 };
