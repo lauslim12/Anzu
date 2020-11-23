@@ -1,4 +1,4 @@
-const adminFunctions = require('../functions/adminFunctions');
+const adminFunctions = require('./adminFunctions');
 const { client } = require('../utils/credentialHandler');
 const createResponse = require('../utils/createResponse');
 const parseNotification = require('../utils/parseNotification');
@@ -90,10 +90,11 @@ const getScheduledTasks = async (event) => {
   const taskDeadlines = [];
 
   tasks.forEach((e, index) => {
-    taskDeadlines.push(parseNotification(e, index + 1));
+    taskDeadlines.push(parseNotification(e, index + 1, 'reminder'));
   });
 
-  if (tasks.length <= 0) {
+  // If there are no tasks, give this message for clarity.
+  if (tasks.length === 0) {
     message = 'You have no tasks due!';
   } else {
     message = taskDeadlines.join('\n');
@@ -118,7 +119,7 @@ const deleteScheduledTask = async (event) => {
   // 3. Send response to the user.
   const response = {
     type: 'text',
-    text: `Task with the name ${taskName} has been deleted!`,
+    text: `Task with the name '${taskName}' has been deleted!`,
   };
 
   await client.replyMessage(event.replyToken, response);

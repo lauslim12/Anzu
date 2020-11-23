@@ -9,10 +9,7 @@ exports.reminder = async () => {
 
   // 2. Send a push message that reminds them of their schedules.
   await Promise.all(
-    sourceIds.forEach(async (id) => {
-      // Prepare the message to reply with.
-      let message;
-
+    sourceIds.map(async (id) => {
       // 1. Call the tasks for the group.
       const tasks = await Task.find({ sourceId: id });
 
@@ -20,14 +17,11 @@ exports.reminder = async () => {
       const taskDeadlines = [];
 
       tasks.forEach((e, index) => {
-        taskDeadlines.push(parseNotification(e, index + 1));
+        taskDeadlines.push(parseNotification(e, index + 1, 'reminder'));
       });
 
-      if (tasks.length <= 0) {
-        message = 'You have no tasks due!';
-      } else {
-        message = taskDeadlines.join('\n');
-      }
+      // It is impossible to get no tasks for an existing sourceId.
+      const message = taskDeadlines.join('\n');
 
       // 3. Send response to user.
       const response = createResponse(
