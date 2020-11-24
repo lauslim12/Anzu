@@ -7,14 +7,25 @@ const taskFunctions = require('../functions/taskFunctions');
 const apiCall = async (event) => {
   const { text } = event.message;
 
-  // 0. Check if invalid input, Anzu does not need to respond.
+  // 1. Check if invalid input, Anzu does not need to respond.
   if (event.type !== 'message' || event.message.type !== 'text') {
     return Promise.resolve(null);
   }
 
+  // 2. Feature guard: if below routes match, apply filter guard first.
+  if (
+    text.startsWith('/schedule') ||
+    text.startsWith('/delete') ||
+    text.startsWith('/leave') ||
+    text.startsWith('System Call: Purge') ||
+    text.startsWith('System Call: Administrator')
+  ) {
+    featureGuard(event);
+  }
+
+  // 3. Access our routes.
   try {
     if (text.startsWith('/schedule')) {
-      featureGuard(event);
       await taskFunctions.scheduleTask(event);
     }
 
@@ -23,16 +34,14 @@ const apiCall = async (event) => {
     }
 
     if (text.startsWith('/delete')) {
-      featureGuard(event);
       await taskFunctions.deleteScheduledTask(event);
     }
 
     if (text.startsWith('/help')) {
-      await taskFunctions.help(event);
+      await behaviorFunctions.help(event);
     }
 
     if (text.startsWith('/leave')) {
-      featureGuard(event);
       await behaviorFunctions.leave(event);
     }
 
@@ -41,12 +50,10 @@ const apiCall = async (event) => {
     }
 
     if (text.startsWith('System Call: Purge')) {
-      featureGuard(event);
       await adminFunctions.purge(event);
     }
 
     if (text.startsWith('System Call: Administrator')) {
-      featureGuard(event);
       await adminFunctions.administrator(event);
     }
   } catch (err) {
