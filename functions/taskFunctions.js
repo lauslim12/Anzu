@@ -25,7 +25,7 @@ exports.scheduleTask = async (event) => {
     );
   }
 
-  if (chosenDate < new Date(Date.now())) {
+  if (Date.parse(chosenDate) < new Date(Date.now())) {
     throw new AppError(
       'You can only assign a task whose deadline is today or greater than today!',
       400,
@@ -90,17 +90,28 @@ exports.getScheduledTasks = async (event) => {
 
 exports.deleteScheduledTask = async (event) => {
   // 1. Fetch the name of the task.
+  const { sourceId } = getSourceId(event);
   const taskString = event.message.text.split(' ');
   const taskName = taskString.splice(1).join(' ');
 
-  // 2. Delete the task.
-  await Task.deleteOne({ name: taskName });
+  // 2. Check if task exists based on name and its sourceId.
+  const task = await Task.find({ name: taskName, sourceId: sourceId });
 
-  // 3. Send response to the user.
-  const response = {
-    type: 'text',
-    text: `Task with the name '${taskName}' has been deleted!`,
-  };
+  if (task.length === 0) {
+    throw new AppError(
+      'The task that you want to delete does not exist!',
+      400,
+      event
+    );
+  }
+
+  // 3. If task exists, delete the task.
+  await Task.deleteOne({ name: taskName, sourceId: sourceId });
+
+  // 4. Send response to the user.
+  const response = createResponse(
+    `Task with the name '${taskName}' has been deleted!`
+  );
 
   await client.replyMessage(event.replyToken, response);
 };
