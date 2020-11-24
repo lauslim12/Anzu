@@ -22,6 +22,9 @@
     "CHANNEL_ACCESS_TOKEN": {
       "description": "Your LINE Developers Account API Key to act as the conduit"
     },
+    "CHANNEL_SECRET": {
+      "desciption": "Your LINE Developers Account Secret Key to authorize yourself"
+    },
     "DATABASE": {
       "description": "Your MongoDB connection string. Make sure to NOT expose the password in this connection string (but fill your username and the database name) (format: mongodbserver://<YOUR_USERNAME>:<PASSWORD>mongodbstring/<YOUR_DATABASE>?mongodbstring)"
     },

@@ -45,6 +45,9 @@ const cleanUpExpiredSchedules = async () => {
 
   await Promise.all(
     sourceIds.map(async (id) => {
+      // Prepare message to be used.
+      let message;
+
       // 1. Get all tasks that are about to be deleted.
       const deadlines = await Task.find({
         sourceId: id,
@@ -58,8 +61,12 @@ const cleanUpExpiredSchedules = async () => {
         tasksToBeNotified.push(parseNotification(e, index + 1, 'cleaning up'));
       });
 
-      // It is impossible to get no tasks for an existing sourceId.
-      const message = tasksToBeNotified.join('\n');
+      // If there are no tasks, give this message for clarity.
+      if (deadlines.length === 0) {
+        message = 'You have no expired tasks for now!';
+      } else {
+        message = tasksToBeNotified.join('\n');
+      }
 
       // 3. Create response.
       const response = createResponse(
