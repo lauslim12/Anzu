@@ -23,7 +23,6 @@ exports.getAllResponsesInApplication = () => {
 
     /* eslint-disable no-console */
     console.log('All responses fetched successfully!');
-    console.log(responses);
   } catch (err) {
     console.error(err);
     /* eslint-enable no-console */
