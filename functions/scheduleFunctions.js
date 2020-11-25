@@ -85,35 +85,34 @@ const cleanUpExpiredSchedules = async () => {
 };
 
 exports.initializeCron = () => {
+  // We are going to setup reminders at 08:00, 12:00, and 17:00.
+  // We are going to setup cleanup jobs at 02:00.
+  const cleanUpSchedules = ['00 02 * * *'];
+  const reminderSchedules = ['00 08 * * *', '00 12 * * *', '00 17 * * *'];
   const settings = {
     scheduled: true,
     timezone: 'Asia/Jakarta',
   };
 
-  // Every day, at 02:00, delete every expired schedules.
-  cron.schedule(
-    '00 02 * * *',
-    async () => {
-      await cleanUpExpiredSchedules();
-    },
-    settings
-  );
+  // For reminders, we are going to iterate through the 'reminderSchedules' array.
+  reminderSchedules.forEach((schedule) => {
+    cron.schedule(
+      schedule,
+      async () => {
+        await reminder();
+      },
+      settings
+    );
+  });
 
-  // Every day, at 08:00, send a reminder to the groups that Anzu is in.
-  cron.schedule(
-    '00 08 * * *',
-    async () => {
-      await reminder();
-    },
-    settings
-  );
-
-  // Every day, at 17:00, send a reminder to the groups that Anzu is in.
-  cron.schedule(
-    '00 17 * * *',
-    async () => {
-      await reminder();
-    },
-    settings
-  );
+  // For cleanups, we are going to iterate through the 'cleanUpSchedules' array.
+  cleanUpSchedules.forEach((schedule) => {
+    cron.schedule(
+      schedule,
+      async () => {
+        await cleanUpExpiredSchedules();
+      },
+      settings
+    );
+  });
 };
