@@ -3,6 +3,7 @@ const { client } = require('../utils/credentialHandler');
 const createResponse = require('../utils/createResponse');
 const parseNotification = require('../utils/parseNotification');
 const Task = require('../models/taskModel');
+const { transformResponse } = require('../utils/responseHelper');
 
 const reminder = async () => {
   // 1. Get all distinct 'sourceIds'. Will return an array filled with 'sourceId'.
@@ -25,9 +26,8 @@ const reminder = async () => {
       const message = taskDeadlines.join('\n');
 
       // 3. Send response to user.
-      const response = createResponse(
-        `Hello everyone! How are you? This is an automated message from Anzu to remind you all of your schedules. Here is it:\n\n${message}\n\nGood luck and stay in high spirits!`
-      );
+      const messageToBeTransformed = transformResponse('reminder', [message]);
+      const response = createResponse(messageToBeTransformed);
 
       await client.pushMessage(id, response);
     })
@@ -69,9 +69,11 @@ const cleanUpExpiredSchedules = async () => {
       }
 
       // 3. Create response.
-      const response = createResponse(
-        `Hello everyone! Did you sleep well? Anzu just wants to let you know that she has cleaned up several expired tasks. Here is it:\n\n${message}\n\nThank you and good luck!`
+      const messageToBeTransformed = transformResponse(
+        'cleanUpExpiredSchedules',
+        [message]
       );
+      const response = createResponse(messageToBeTransformed);
 
       // 4. Send response.
       await client.pushMessage(id, response);
