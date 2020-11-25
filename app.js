@@ -1,12 +1,24 @@
 // Global Imports.
+const compression = require('compression');
+const cors = require('cors');
 const express = require('express');
+const helmet = require('helmet');
 
 // Personal Functions.
 const apiRoutes = require('./routes/apiRoutes');
+const { getAllResponsesInApplication } = require('./utils/responseHelper');
 const { lineMiddleware } = require('./utils/credentialHandler');
+
+// Top level code, fetch all the responses synchronously for easier handling (load-balancing).
+getAllResponsesInApplication();
 
 // Application Setup.
 const app = express();
+
+// Middleware Setup.
+app.use(cors());
+app.use(helmet());
+app.use(compression());
 
 // Routes.
 app.get('/', async (_, res) => {

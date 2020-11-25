@@ -4,6 +4,7 @@ const createResponse = require('../utils/createResponse');
 const getSourceId = require('../utils/getSourceId');
 const parseNotification = require('../utils/parseNotification');
 const Task = require('../models/taskModel');
+const { transformResponse } = require('../utils/responseHelper');
 
 exports.scheduleTask = async (event) => {
   // Check for all variables.
@@ -25,7 +26,7 @@ exports.scheduleTask = async (event) => {
     );
   }
 
-  if (Date.parse(chosenDate) < new Date(Date.now())) {
+  if (chosenDate < new Date(Date.now()).toISOString().split('T')[0]) {
     throw new AppError(
       'You can only assign a task whose deadline is today or greater than today!',
       400,
@@ -43,11 +44,11 @@ exports.scheduleTask = async (event) => {
   });
 
   // 4. Send back response to the user.
-  const response = createResponse(
-    `Thank you! Your task of '${task}' with the deadline being ${
-      new Date(chosenDate).toISOString().split('T')[0]
-    } has been created successfully!`
-  );
+  const message = transformResponse('scheduleTask', [
+    task,
+    new Date(chosenDate).toISOString().split('T')[0],
+  ]);
+  const response = createResponse(message);
 
   await client.replyMessage(event.replyToken, response);
 };
@@ -81,9 +82,10 @@ exports.getScheduledTasks = async (event) => {
   }
 
   // 5. Send response back to the user.
-  const response = createResponse(
-    `Hello everyone! Anzu is here to remind you all of your schedules. Here is it:\n\n${message}\n\nGood luck and stay in high spirits!`
-  );
+  const messageToBeTransformed = transformResponse('getScheduledTasks', [
+    message,
+  ]);
+  const response = createResponse(messageToBeTransformed);
 
   await client.replyMessage(event.replyToken, response);
 };
@@ -109,9 +111,8 @@ exports.deleteScheduledTask = async (event) => {
   await Task.deleteOne({ name: taskName, sourceId: sourceId });
 
   // 4. Send response to the user.
-  const response = createResponse(
-    `Task with the name '${taskName}' has been deleted!`
-  );
+  const message = transformResponse('deleteScheduledTask', [taskName]);
+  const response = createResponse(message);
 
   await client.replyMessage(event.replyToken, response);
 };
