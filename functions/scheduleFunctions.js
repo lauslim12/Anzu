@@ -89,10 +89,15 @@ const cleanUpExpiredSchedules = async () => {
 };
 
 exports.initializeCron = () => {
-  // We are going to setup reminders at 08:00, 12:00, and 17:00.
+  // We are going to setup reminders at 08:00, 12:00, 17:00, and 21:00.
   // We are going to setup cleanup jobs at 02:00.
   const cleanUpSchedules = ['00 02 * * *'];
-  const reminderSchedules = ['00 08 * * *', '00 12 * * *', '00 17 * * *'];
+  const reminderSchedules = [
+    '00 08 * * *',
+    '00 12 * * *',
+    '00 17 * * *',
+    '00 21 * * *',
+  ];
   const settings = {
     scheduled: true,
     timezone: 'Asia/Jakarta',
