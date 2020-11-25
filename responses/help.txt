@@ -1,0 +1,7 @@
+Anzu is available for the following commands:
+
+1. (/schedule <deadline> <job_name>) to schedule your tasks
+2. (/tasks) to show all available tasks
+3. (/delete <job_name>) to delete available tasks in this room
+4. (/help) to spawn the help menu
+5. (/leave) to make me leave (if on a group or multi-chat environment)
