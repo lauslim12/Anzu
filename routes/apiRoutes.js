@@ -8,12 +8,18 @@ const apiCall = async (event) => {
   // Add an error handling if null.
   const { text } = event.message || {};
 
-  // 1. Check if invalid input, Anzu does not need to respond.
+  // 1. Our 'event handler' that will catch any events other than 'message' events.
+  if (event.type === 'join') {
+    await behaviorFunctions.join(event);
+  }
+
+  // 2. Check if invalid input or invalid event type, Anzu does not need to respond.
+  // Resolve the promise and exit the asynchronous map function.
   if (event.type !== 'message' || event.message.type !== 'text') {
     return Promise.resolve(null);
   }
 
-  // 2. Feature guard: if below routes match, apply filter guard first.
+  // 3. Feature guard: if below routes match, apply filter guard first.
   if (
     text.startsWith('/schedule') ||
     text.startsWith('/delete') ||
@@ -24,7 +30,7 @@ const apiCall = async (event) => {
     featureGuard(event);
   }
 
-  // 3. Access our routes.
+  // 4. Access our routes.
   try {
     if (text.startsWith('/schedule')) {
       await taskFunctions.scheduleTask(event);

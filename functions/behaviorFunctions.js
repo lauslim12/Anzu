@@ -12,6 +12,14 @@ exports.help = async (event) => {
   await client.replyMessage(event.replyToken, response);
 };
 
+exports.join = async (event) => {
+  // 1. Send a greeting message.
+  const message = transformResponse('join', []);
+  const response = createResponse(message);
+
+  await client.replyMessage(event.replyToken, response);
+};
+
 exports.anzuSpeaks = async (event) => {
   const message = transformResponse('anzuSpeaks', []);
   const response = createResponse(message);
