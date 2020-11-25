@@ -5,7 +5,8 @@ const featureGuard = require('../utils/featureGuard');
 const taskFunctions = require('../functions/taskFunctions');
 
 const apiCall = async (event) => {
-  const { text } = event.message;
+  // Add an error handling if null.
+  const { text } = event.message || {};
 
   // 1. Check if invalid input, Anzu does not need to respond.
   if (event.type !== 'message' || event.message.type !== 'text') {
