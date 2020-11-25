@@ -23,6 +23,7 @@ exports.getAllResponsesInApplication = () => {
 
     /* eslint-disable no-console */
     console.log('All responses fetched successfully!');
+    console.log(responses);
   } catch (err) {
     console.error(err);
     /* eslint-enable no-console */
@@ -31,8 +32,6 @@ exports.getAllResponsesInApplication = () => {
 
 // Call this when running the function.
 exports.transformResponse = (responseName, [...messageToReplace]) => {
-  console.log(responses);
-
   // When calling files, replace and destructure.
   const textToBeProcessed = responses.find((file) => file.name === responseName)
     .text;

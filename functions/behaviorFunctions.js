@@ -6,14 +6,14 @@ const { transformResponse } = require('../utils/responseHelper');
 
 exports.help = async (event) => {
   // 1. Simply send a help message.
-  const message = transformResponse('help');
+  const message = transformResponse('help', []);
   const response = createResponse(message);
 
   await client.replyMessage(event.replyToken, response);
 };
 
 exports.anzuSpeaks = async (event) => {
-  const message = transformResponse('anzuSpeaks');
+  const message = transformResponse('anzuSpeaks', []);
   const response = createResponse(message);
 
   await client.replyMessage(event.replyToken, response);
@@ -30,7 +30,7 @@ exports.leave = async (event) => {
     );
   }
 
-  const message = transformResponse('leave');
+  const message = transformResponse('leave', []);
   const response = createResponse(message);
 
   await client.replyMessage(event.replyToken, response);
