@@ -31,6 +31,8 @@ exports.getAllResponsesInApplication = () => {
 
 // Call this when running the function.
 exports.transformResponse = (responseName, [...messageToReplace]) => {
+  console.log(responses);
+
   // When calling files, replace and destructure.
   const textToBeProcessed = responses.find((file) => file.name === responseName)
     .text;
