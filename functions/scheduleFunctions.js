@@ -15,7 +15,11 @@ const reminder = async () => {
       // 1. Call the tasks for the group.
       const tasks = await Task.find({ sourceId: id });
 
-      // 2. Process them as a string to be sent.
+      // 2. Sort the tasks based on date for easier reading.
+      // Sort from the closest deadline to the furthest deadline!
+      tasks.sort((el1, el2) => new Date(el1.deadline) - new Date(el2.deadline));
+
+      // 3. Process them as a string to be sent.
       const taskDeadlines = [];
 
       tasks.forEach((e, index) => {
@@ -25,7 +29,7 @@ const reminder = async () => {
       // It is impossible to get no tasks for an existing sourceId.
       const message = taskDeadlines.join('\n');
 
-      // 3. Send response to user.
+      // 4. Send response to user.
       const messageToBeTransformed = transformResponse('reminder', [message]);
       const response = createResponse(messageToBeTransformed);
 
