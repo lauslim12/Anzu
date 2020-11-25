@@ -34,6 +34,10 @@ exports.scheduleTask = async (event) => {
     );
   }
 
+  if (!task || task.length === 0) {
+    throw new AppError('Please specify the task name!', 400, event);
+  }
+
   // 3. Insert all the given data into the database.
   await Task.create({
     sourceId: sourceId,
