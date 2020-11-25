@@ -72,6 +72,7 @@ crontab -e
 ```bash
 55 01 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
 55 07 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
+55 11 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
 55 16 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
 ```
 
@@ -81,6 +82,20 @@ crontab -e
 sudo grep CRON /var/log/syslog
 ```
 
+- As an additional note, you might want to setup SSH into your Git, as I have programmed it to always pull from the latest repository everytime the `main.sh` shell script is launched. Don't forget to set the `origin` URL.
+
+```bash
+cd $HOME
+ssh-keygen -t rsa -b 4096 -C <your_github_email>
+cd .ssh
+ls -a             # Check out your RSA '.pub' name.
+cat id_rsa.pub    # The default identifier is 'id_rsa'. You probably have a different identifier.
+
+# Then, configure your access keys with your GitHub configuration. After that, test your connection.
+ssh -T git@github.com
+git remote set-url origin git+ssh://git@github.com/username/reponame.git
+```
+
 ## TODO
 
 - Make an environment variable that stores the bot name.
@@ -88,4 +103,4 @@ sudo grep CRON /var/log/syslog
 - Add a `LICENSE`, and `CONTRIBUTING`, as a file, and as a reference in this documentation.
 - Add a `Credits`, `Development`, `Architecture`, `Contribution`, `Commands List` and `Project Structure` in this `README.md` file for documentation.
 - Add screenshots for the repository.
-- Create a function to group all of the output in the `responses` folder for easier maintainability.
+- ~~Create a function to group all of the output in the `responses` folder for easier maintainability.~~
