@@ -26,7 +26,7 @@ exports.scheduleTask = async (event) => {
     );
   }
 
-  if (Date.parse(chosenDate) < new Date(Date.now())) {
+  if (chosenDate < new Date(Date.now()).toISOString().split('T')[0]) {
     throw new AppError(
       'You can only assign a task whose deadline is today or greater than today!',
       400,
