@@ -5,3 +5,5 @@ Anzu is available for the following commands:
 3. (/delete <job_name>) to delete available tasks in this room
 4. (/help) to spawn the help menu
 5. (/leave) to make me leave (if on a group or multi-chat environment)
+
+As a note, you can use me by inviting me to a group, a room, or by just simply messaging me! The commands are compatible with each other!
