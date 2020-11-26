@@ -11,10 +11,10 @@ exports.purge = async (event) => {
   await client.replyMessage(event.replyToken, response);
 };
 
-exports.leave = async (event) => {
-  try {
-  } catch (err) {}
-};
+// exports.leave = async (event) => {
+//   try {
+//   } catch (err) {}
+// };
 
 exports.administrator = async (event) => {
   const response = createResponse(
