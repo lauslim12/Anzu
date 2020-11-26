@@ -19,19 +19,19 @@ const apiCall = async (event) => {
     return Promise.resolve(null);
   }
 
-  // 3. Feature guard: if below routes match, apply filter guard first.
-  if (
-    text.startsWith('/schedule') ||
-    text.startsWith('/delete') ||
-    text.startsWith('/leave') ||
-    text.startsWith('System Call: Purge') ||
-    text.startsWith('System Call: Administrator')
-  ) {
-    featureGuard(event);
-  }
-
-  // 4. Access our routes.
+  // 3. Access our routes.
   try {
+    // 4. Feature guard: if below routes match, apply filter guard first.
+    if (
+      text.startsWith('/schedule') ||
+      text.startsWith('/delete') ||
+      text.startsWith('/leave') ||
+      text.startsWith('System Call: Purge') ||
+      text.startsWith('System Call: Administrator')
+    ) {
+      featureGuard(event);
+    }
+
     if (text.startsWith('/schedule')) {
       await taskFunctions.scheduleTask(event);
     }
