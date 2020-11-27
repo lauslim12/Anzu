@@ -1,6 +1,6 @@
 Hello! Did you call me? I am Anzu, an open source scheduler chatbot created by Nicholas Dwiarto.
 
-I am fully open source! My source code is available on GitHub (https://github.com/lauslim12/Anzu). 
+I am fully open source! My source code is available on GitHub (https://github.com/lauslim12/Anzu).
 
 If you find any issues, please submit an issue at the link above. My creator also accepts open source contributions!
 
