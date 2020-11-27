@@ -101,7 +101,7 @@ exports.initializeCron = () => {
   // We are going to setup reminders at 17:00.
   // We are going to setup cleanup jobs at 02:00.
   const cleanUpSchedules = ['00 02 * * *'];
-  const reminderSchedules = ['30 12 * * *'];
+  const reminderSchedules = ['00 17 * * *'];
   const settings = {
     scheduled: true,
     timezone: 'Asia/Jakarta',
