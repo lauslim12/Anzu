@@ -22,7 +22,7 @@ Please use [Semantic Commit Messages](https://seesparkbox.com/foundry/semantic_c
 
 ## Note About Anzu Replying
 
-If you want to add a feature that makes Anzu reply to the users, please insert the output message (in the file format of `functionName.txt`) in the `responses` folder. **Make sure that the function name is the same as the file output name.**
+If you want to add a feature that makes Anzu reply to the users, please insert the output message (in the file format of `functionName.txt`) in the `responses/functionsFileName` folder (`taskFunctions` will be named as `tasks`, plural). **Make sure that the function name is the same as the file output name.**
 
 If you need to insert dynamic messages, use the provided `transformResponse` function in `utils/responseHelper.js` and prepare a template in the file like I did with `<%MESSAGE(NUMBER_STARTS_FROM_ZERO)%>`. Note that you should insert an empty array if you do not need to insert dynamic messages.
 

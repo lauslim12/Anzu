@@ -12,13 +12,19 @@ exports.getAllResponsesInApplication = () => {
     const directories = fs.readdirSync(pathToResponses);
 
     // 2. Read all files, synchronously, and strip the extension.
-    directories.forEach((file) => {
-      const pathToText = path.join(pathToResponses, file);
-      const fileContent = fs.readFileSync(pathToText, 'utf-8');
-      const fileName = path.parse(file).name;
+    directories.forEach((subdirectory) => {
+      const subdirectories = fs.readdirSync(
+        path.join(pathToResponses, subdirectory)
+      );
 
-      // 3. Push it into the 'responses' array.
-      responses.push({ name: fileName, text: fileContent });
+      subdirectories.forEach((file) => {
+        const pathToText = path.join(pathToResponses, subdirectory, file);
+        const fileContent = fs.readFileSync(pathToText, 'utf-8');
+        const fileName = path.parse(file).name;
+
+        // 3. Push it into the 'responses' array.
+        responses.push({ name: fileName, text: fileContent });
+      });
     });
 
     /* eslint-disable no-console */
