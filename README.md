@@ -75,6 +75,8 @@ In order to run Anzu in your own web server, following steps must be done.
 
 - Create a LINE Official Account and take note that it takes a webhook URL.
 
+- Don't forget to disable all of the auto-response and greeting messages, as they have already been programmed in the application.
+
 - The next thing that you should do is that you must make yourself a MongoDB connection string to be used. I recommend you to use [MongoDB Atlas](https://www.mongodb.com/cloud/atlas), a Database as a Service. Get your connection string and we are going to use it in the `DATABASE`, `DATABASE_PASSWORD`, and `DATABASE_USERNAME` environment variable.
 
 - We'll start by initializing our repository. First off, fork and clone the repository. I am going to assume that you would clone the repository into the `$HOME` directory.
@@ -122,10 +124,9 @@ After deploying the application, put the URL of your deployed application into y
 CRON is used to schedule timers of when Anzu would remind its users about tasks to be done. Like a true scheduler bot, cronjobs are run at the following times (GMT +7 time):
 
 - 02:00 (to clean up expired tasks)
-- 08:00 (to remind a user / group / room about a task)
-- 12:00 (to remind a user / group / room about a task)
 - 17:00 (to remind a user / group / room about a task)
-- 21:00 (to remind a user / group / room about a task)
+
+If you have a paid LINE subscription, you can add more reminders. However, as I am stuck with the free version, I'll keep them at two reminders per day.
 
 We have to take into consideration that Heroku free dynos sleep every 30 minutes when our application is not running. When our application is sleeping, the cronjobs made with `node-cron` **will not run**.
 
@@ -142,10 +143,7 @@ crontab -e
 
 ```bash
 55 01 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
-55 07 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
-55 11 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
 55 16 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
-55 20 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
 ```
 
 - In order to check if our crontab had run successfully, we could use the following command.
