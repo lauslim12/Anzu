@@ -8,11 +8,17 @@ const { transformResponse } = require('../utils/responseHelper');
 exports.added = async (event) => {
   const { sourceId, type } = getSourceId(event);
 
-  await Source.create({
-    sourceId: sourceId,
-    sourceType: type,
-  });
+  // 1. If found duplicate, don't save.
+  const source = await Source.findOne({ sourceId: sourceId, sourceType: type });
 
+  if (!source) {
+    await Source.create({
+      sourceId: sourceId,
+      sourceType: type,
+    });
+  }
+
+  // 2. Send response.
   const message = transformResponse('added', []);
   const response = createResponse(message);
 
@@ -28,13 +34,17 @@ exports.help = async (event) => {
 };
 
 exports.join = async (event) => {
-  // 1. Add to database.
   const { sourceId, type } = getSourceId(event);
 
-  await Source.create({
-    sourceId: sourceId,
-    sourceType: type,
-  });
+  // 1. If found duplicate, don't save.
+  const source = await Source.findOne({ sourceId: sourceId, sourceType: type });
+
+  if (!source) {
+    await Source.create({
+      sourceId: sourceId,
+      sourceType: type,
+    });
+  }
 
   // 2. Send a greeting message.
   const message = transformResponse('join', []);
