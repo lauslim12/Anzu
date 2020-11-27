@@ -2,18 +2,19 @@
   "name": "anzu",
   "version": "1.0.0",
   "description": "A LINE chatbot to schedule and remind you of your tasks",
-  "private": "true",
+  "private": true,
   "main": "server.js",
   "scripts": {
     "prettier": "prettier --check --config ./.prettierrc ./**/*.js",
     "lint": "npx eslint . --ext .js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "production": "node server.js --disable-administrator"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lauslim12/Anzu.git"
   },
-  "author": "Nicholas Dwiarto",
+  "author": "Nicholas Dwiarto <nicholasdwiarto@yahoo.com> (https://nicholasdw.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/lauslim12/Anzu/issues"
