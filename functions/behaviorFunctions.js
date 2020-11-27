@@ -2,7 +2,17 @@ const AppError = require('../utils/appError');
 const { client } = require('../utils/credentialHandler');
 const createResponse = require('../utils/createResponse');
 const getSourceId = require('../utils/getSourceId');
+const Source = require('../models/sourceModel');
 const { transformResponse } = require('../utils/responseHelper');
+
+exports.added = async (event) => {
+  const { sourceId, type } = getSourceId(event);
+
+  await Source.create({
+    sourceId: sourceId,
+    sourceType: type,
+  });
+};
 
 exports.help = async (event) => {
   // 1. Simply send a help message.
@@ -13,7 +23,15 @@ exports.help = async (event) => {
 };
 
 exports.join = async (event) => {
-  // 1. Send a greeting message.
+  // 1. Add to database.
+  const { sourceId, type } = getSourceId(event);
+
+  await Source.create({
+    sourceId: sourceId,
+    sourceType: type,
+  });
+
+  // 2. Send a greeting message.
   const message = transformResponse('join', []);
   const response = createResponse(message);
 
