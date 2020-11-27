@@ -13,6 +13,10 @@ const apiCall = async (event) => {
     await behaviorFunctions.join(event);
   }
 
+  if (event.type === 'follow') {
+    await behaviorFunctions.added(event);
+  }
+
   // 2. Check if invalid input or invalid event type, Anzu does not need to respond.
   // Resolve the promise and exit the asynchronous map function.
   if (event.type !== 'message' || event.message.type !== 'text') {
@@ -23,11 +27,17 @@ const apiCall = async (event) => {
   try {
     // 4. Feature guard: if below routes match, apply filter guard first.
     if (
-      text.startsWith('/schedule') ||
-      text.startsWith('/delete') ||
-      text.startsWith('/leave') ||
       text.startsWith('System Call: Purge') ||
       text.startsWith('System Call: Administrator')
+    ) {
+      featureGuard(event);
+    }
+
+    if (
+      (text.startsWith('/schedule') ||
+        text.startsWith('/delete') ||
+        text.startsWith('/leave')) &&
+      process.argv[2] !== '--disable-administrator'
     ) {
       featureGuard(event);
     }
