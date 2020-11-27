@@ -8,15 +8,10 @@ const { transformResponse } = require('../utils/responseHelper');
 exports.added = async (event) => {
   const { sourceId, type } = getSourceId(event);
 
-  // 1. If there's an exact sourceId in the database, don't insert anything.
-  const source = await Source.find({ sourceId: sourceId, type: type });
-
-  if (!source || source.length === 0) {
-    await Source.create({
-      sourceId: sourceId,
-      sourceType: type,
-    });
-  }
+  await Source.create({
+    sourceId: sourceId,
+    sourceType: type,
+  });
 
   const message = transformResponse('added', []);
   const response = createResponse(message);
@@ -36,15 +31,10 @@ exports.join = async (event) => {
   // 1. Add to database.
   const { sourceId, type } = getSourceId(event);
 
-  // 1. If there's an exact sourceId in the database, don't insert anything.
-  const source = await Source.find({ sourceId: sourceId, type: type });
-
-  if (!source || source.length === 0) {
-    await Source.create({
-      sourceId: sourceId,
-      sourceType: type,
-    });
-  }
+  await Source.create({
+    sourceId: sourceId,
+    sourceType: type,
+  });
 
   // 2. Send a greeting message.
   const message = transformResponse('join', []);
