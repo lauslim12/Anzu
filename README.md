@@ -4,6 +4,13 @@ Anzu (she/her) is an open source LINE chatbot to remind you of your tasks. Anzu 
 
 Picture here.
 
+## Architecture
+
+- Asynchronous Programming
+- Functional Programming
+- JavaScript Programming Language
+- Shell Scripts and Micro Computers for Automation
+
 ## Requirements
 
 You have to have the following to run Anzu.
@@ -19,6 +26,8 @@ You have to have the following to run Anzu.
 Anzu is open source and is under continuous development. Keep in touch by starring this repository!
 
 ## How to Use
+
+If you have no desire to deploy your own but want to test the functionalities of the chatbot, [feel free to add Anzu as one of your friends in LINE](https://line.me/R/ti/p/@087wqrja). However, that Anzu is still in the development version, so you cannot schedule, delete, or do anything with the bot for now. You can only add her as a friend and probably do a few things. As an alternative, you could deploy her by yourselves.
 
 ## Command List
 
@@ -40,6 +49,23 @@ Following are the example usage of Anzu.
 - `/schedule 1234567890` will fail as it is not a valid date.
 - `/schedule 1970-01-01 Linux Epoch Time` will fail as it is less than the current date.
 - `/delete randomJob` will fail if `randomJob` does not exist in the current group, room, or personal environment.
+
+## Project Structure
+
+The project is structured as follows:
+
+- `.circleci` for CircleCI pipeline integration.
+- `auto` for the automatic ping script (CRON).
+- `functions` to store the essential functions.
+- `models` to store NoSQL data models.
+- `responses` to store Anzu's responses.
+- `routes` to process Anzu's commands.
+- `utils` for utility functions.
+- `.eslintrc.json`, `.prettierrc` are for linting and prettifying the code.
+- `app.js`, `server.js` are for starting the application.
+- `app.json`, `Procfile` are Heroku configuration files.
+- `package.json`, `package-lock.json` are Node.js dependency manager.
+- The rest (`.gitignore`, `LICENSE`, `CONTRIBUTING.md`, `README.md`) are your usual GitHub documents.
 
 ## How to Install
 
@@ -81,7 +107,11 @@ heroku config:set KEY=VALUE (refer to app.json for all environment variables)
 heroku open
 ```
 
-Or simply click the following button.
+If you want to use the production version (everyone can schedule tasks, delete tasks, etcetera), make sure to use the `web/production` (from `Procfile`) process in the Heroku dyno settings.
+
+The default dyno process is `web`, and it will run `npm start`.
+
+As an alternative to deployment, simply click the following button.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/lauslim12/Anzu)
 
@@ -89,7 +119,15 @@ After deploying the application, put the URL of your deployed application into y
 
 ## Automated CRON Setup
 
-Cronjobs are run at 02:00 (to clean up expired tasks), 08:00 (to remind a user / group / room about a task), and 17:00 (to remind a user / group / room about a task). We have to take into consideration that Heroku free dynos sleep every 30 minutes when our application is not running. When our application is sleeping, the cronjobs made with `node-cron` **will not run**.
+CRON is used to schedule timers of when Anzu would remind its users about tasks to be done. Like a true scheduler bot, cronjobs are run at the following times (GMT +7 time):
+
+- 02:00 (to clean up expired tasks)
+- 08:00 (to remind a user / group / room about a task)
+- 12:00 (to remind a user / group / room about a task)
+- 17:00 (to remind a user / group / room about a task)
+- 21:00 (to remind a user / group / room about a task)
+
+We have to take into consideration that Heroku free dynos sleep every 30 minutes when our application is not running. When our application is sleeping, the cronjobs made with `node-cron` **will not run**.
 
 In order to circumvent the above case, we are going to use cronjobs to ping the Heroku server, so that it will wake up before the cronjobs start.
 
@@ -107,6 +145,7 @@ crontab -e
 55 07 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
 55 11 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
 55 16 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
+55 20 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
 ```
 
 - In order to check if our crontab had run successfully, we could use the following command.
@@ -155,8 +194,10 @@ Feel free to cite everything from this repository, as long as you give your cred
 ## TODO
 
 - Make an environment variable that stores the bot name.
-- Make an argument parser that is used to disable or enable protected routes.
+- ~~Make an argument parser that is used to disable or enable protected routes.~~
 - ~~Add a `LICENSE`, and `CONTRIBUTING`, as a file, and as a reference in this documentation.~~
-- Add a `Credits`, `Development`, `Architecture`, `Contribution`, `Commands List` and `Project Structure` in this `README.md` file for documentation.
+- ~~Add a `Credits`, `Development`, `Architecture`, `Contribution`, `Commands List` and `Project Structure` in this `README.md` file for documentation.~~
 - Add screenshots for the repository.
 - ~~Create a function to group all of the output in the `responses` folder for easier maintainability.~~
+- ~~CircleCI Integration.~~
+- Add badges to the README file.
