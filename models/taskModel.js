@@ -22,6 +22,10 @@ const taskSchema = new mongoose.Schema({
     enum: ['group', 'room', 'user', 'none'],
     default: 'none',
   },
+  dateAdded: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 const Task = mongoose.model('Task', taskSchema);
