@@ -123,7 +123,7 @@ After deploying the application, put the URL of your deployed application into y
 
 CRON is used to schedule timers of when Anzu would remind its users about tasks to be done. Like a true scheduler bot, cronjobs are run at the following times (GMT +7 time):
 
-- 02:00 (to clean up expired tasks)
+- 01:00 (to clean up expired tasks)
 - 17:00 (to remind a user / group / room about a task)
 
 If you have a paid LINE subscription, you can add more reminders. However, as I am stuck with the free version, I'll keep them at two reminders per day.
@@ -142,7 +142,7 @@ crontab -e
 - The reason the crontab is setup like this is so that it gives Heroku time to prepare before running the cronjobs made with `node-cron`. We just need to ping the webserver (a small `GET` request) so that it wakes up.
 
 ```bash
-55 01 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
+55 00 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
 55 16 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
 ```
 
