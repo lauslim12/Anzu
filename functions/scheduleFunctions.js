@@ -99,8 +99,8 @@ const cleanUpExpiredSchedules = async () => {
 
 exports.initializeCron = () => {
   // We are going to setup reminders at 17:00.
-  // We are going to setup cleanup jobs at 02:00.
-  const cleanUpSchedules = ['00 02 * * *'];
+  // We are going to setup cleanup jobs at 01:00.
+  const cleanUpSchedules = ['00 01 * * *'];
   const reminderSchedules = ['00 17 * * *'];
   const settings = {
     scheduled: true,
