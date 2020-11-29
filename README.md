@@ -2,6 +2,12 @@
 
 Anzu (she/her) is an open source LINE chatbot to remind you of your tasks. Anzu is fully asynchronous and uses JavaScript's natural asynchronous nature to its fullest.
 
+<p align="center">
+  <img src="https://img.shields.io/badge/License-MIT-%233572A5"/>
+  <img src="https://img.shields.io/badge/Pipeline-CicleCI-lightgrey"/>
+  <img src="https://img.shields.io/badge/Coded%20with-JavaScript-yellow"/>
+</p>
+
 Picture here.
 
 ## Architecture
@@ -198,4 +204,4 @@ Feel free to cite everything from this repository, as long as you give your cred
 - Add screenshots for the repository.
 - ~~Create a function to group all of the output in the `responses` folder for easier maintainability.~~
 - ~~CircleCI Integration.~~
-- Add badges to the README file.
+- ~~Add badges to the README file.~~
