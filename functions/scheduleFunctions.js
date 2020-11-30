@@ -10,12 +10,9 @@ const reminder = async () => {
   const sourceIds = await Task.find({}, 'sourceId').distinct('sourceId');
 
   // 2. Send a push message that reminds them of their schedules.
-  // Create a sequential loop to prevent 'Too Many Requests' error.
-  // We're going to use a normal 'for' loop, refactor later with 'reduce' for readability.
-  /* eslint-disable no-await-in-loop */
-  for (let i = 0; i < sourceIds.length; i += 1) {
+  await sourceIds.reduce(async (_, id) => {
     // 1. Call the tasks for the group.
-    const tasks = await Task.find({ sourceId: sourceIds[i] });
+    const tasks = await Task.find({ sourceId: id });
 
     // 2. Sort the tasks based on date for easier reading.
     // Sort from the closest deadline to the furthest deadline!
@@ -37,9 +34,8 @@ const reminder = async () => {
 
     // 5. Wait 2 seconds before sending a message (prevent too many requests error).
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    await client.pushMessage(sourceIds[i], response);
-  }
-  /* eslint-enable no-await-in-loop */
+    return await client.pushMessage(id, response);
+  }, Promise.resolve(null));
 };
 
 const cleanUpExpiredSchedules = async () => {
@@ -52,19 +48,19 @@ const cleanUpExpiredSchedules = async () => {
   );
 
   // Create a sequential loop to prevent 'Too Many Requests' error.
-  // We're going to use a normal 'for' loop, refactor later with 'reduce' for readability.
-  /* eslint-disable no-await-in-loop */
-  for (let i = 0; i < sourceIds.length; i += 1) {
-    // Prepare message to be used.
-    let message;
-
+  await sourceIds.reduce(async (_, id) => {
     // 1. Get all tasks that are about to be deleted.
     const deadlines = await Task.find({
-      sourceId: sourceIds[i],
+      sourceId: id,
       deadline: { $lt: currentDate },
     });
 
-    // 2. Parse notification for every tasks to be deleted.
+    // 2. Added feature: no need to notify if there are no expired tasks.
+    if (deadlines.length === 0) {
+      return;
+    }
+
+    // 3. Parse notification for every tasks to be deleted.
     const tasksToBeNotified = [];
 
     deadlines.forEach((e, index) => {
@@ -72,26 +68,21 @@ const cleanUpExpiredSchedules = async () => {
     });
 
     // If there are no tasks, give this message for clarity.
-    if (deadlines.length === 0) {
-      message = 'You have no expired tasks for now!';
-    } else {
-      message = tasksToBeNotified.join('\n');
-    }
+    const message = tasksToBeNotified.join('\n');
 
-    // 3. Create response.
+    // 4. Create response.
     const messageToBeTransformed = transformResponse(
       'cleanUpExpiredSchedules',
       [message]
     );
     const response = createResponse(messageToBeTransformed);
 
-    // 4. Wait 2 seconds before sending a message (prevent too many requests error).
+    // 5. Wait 2 seconds before sending a message (prevent too many requests error).
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // 5. Send response.
-    await client.pushMessage(sourceIds[i], response);
-  }
-  /* eslint-enable no-await-in-loop */
+    // 6. Send response.
+    return await client.pushMessage(id, response);
+  }, Promise.resolve(null));
 
   // 3. Delete every tasks that have expired.
   await Task.deleteMany({ deadline: { $lt: currentDate } });
