@@ -8,7 +8,7 @@ Anzu (she/her) is an open source LINE chatbot to remind you of your tasks. Anzu 
   <img src="https://img.shields.io/badge/Coded%20with-JavaScript-yellow"/>
 </p>
 
-Picture here.
+![screenshot](.github/screenshot.png)
 
 ## Architecture
 
@@ -61,6 +61,7 @@ Following are the example usage of Anzu.
 The project is structured as follows:
 
 - `.circleci` for CircleCI pipeline integration.
+- `.github` for repository related files.
 - `auto` for the automatic ping script (CRON).
 - `functions` to store the essential functions.
 - `models` to store NoSQL data models.
