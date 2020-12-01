@@ -115,19 +115,27 @@ exports.initializeCron = () => {
   };
 
   // For reminders, we are going to iterate through the 'reminderSchedules' array.
-  reminderSchedules.forEach((schedule) => {
-    cron.schedule(
-      schedule,
-      async () => {
-        if (process.argv[3] === '--enable-long-reminder') {
+  if (process.argv[3] === '--enable-long-reminder') {
+    reminderSchedules.forEach((schedule) => {
+      cron.schedule(
+        schedule,
+        async () => {
           await reminder();
-        } else {
+        },
+        settings
+      );
+    });
+  } else {
+    reminderSchedules.forEach((schedule) => {
+      cron.schedule(
+        schedule,
+        async () => {
           await compactReminder();
-        }
-      },
-      settings
-    );
-  });
+        },
+        settings
+      );
+    });
+  }
 
   // For cleanups, we are going to iterate through the 'cleanUpSchedules' array.
   cleanUpSchedules.forEach((schedule) => {
