@@ -8,7 +8,7 @@
     "prettier": "prettier --check --config ./.prettierrc ./**/*.js",
     "lint": "npx eslint . --ext .js",
     "start": "node server.js",
-    "production": "node server.js --disable-administrator"
+    "production": "node server.js --disable-administrator --enable-long-reminder"
   },
   "repository": {
     "type": "git",
