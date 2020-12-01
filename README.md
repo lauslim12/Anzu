@@ -33,7 +33,9 @@ Anzu is open source and is under continuous development. Keep in touch by starri
 
 ## How to Use
 
-If you have no desire to deploy your own but want to test the functionalities of the chatbot, [feel free to add Anzu as one of your friends in LINE](https://line.me/R/ti/p/@087wqrja). However, that Anzu is still in the development version, so you cannot schedule, delete, or do anything with the bot for now. You can only add her as a friend and probably do a few things. As an alternative, you could deploy her by yourselves.
+If you have no desire to deploy your own but want to test the functionalities of the chatbot, [feel free to add Anzu as one of your friends in LINE](https://line.me/R/ti/p/@087wqrja). However, please remember that Anzu is still in the development version, so you cannot schedule, delete, or do anything with the bot for now. You can only add her as a friend and probably do a few things.
+
+As an alternative, you could deploy her by yourselves.
 
 ## Command List
 
@@ -44,6 +46,11 @@ Anzu is available for the following commands.
 - `/delete <job_name>` to delete available tasks in the current environment (room / group / personal).
 - `/help` to spawn the help menu.
 - `/leave` to make Anzu leave.
+
+Several administrator commands are also available for testing the bot.
+
+- `System Call: Purge` is used to clear the whole database.
+- `System Call: Administrator` is used to check if the user saying that passphrase is an administrator or not.
 
 Anzu comes with several error-handling methods. It is impossible to create a task whose deadline is less than the current date. Deleting tasks that does not exist in the current environment that Anzu is in is also impossible. Refer below for usage examples.
 
@@ -116,7 +123,7 @@ heroku config:set KEY=VALUE (refer to app.json for all environment variables)
 heroku open
 ```
 
-If you want to use the production version (everyone can schedule tasks, delete tasks, etcetera), make sure to use the `web/production` (from `Procfile`) process in the Heroku dyno settings.
+If you want to use the production version (everyone can schedule tasks, delete tasks, enable long reminders, etcetera), make sure to use the `web/production` (from `Procfile`) process in the Heroku dyno settings.
 
 The default dyno process is `web`, and it will run `npm start`.
 
@@ -126,16 +133,16 @@ As an alternative to deployment, simply click the following button.
 
 After deploying the application, put the URL of your deployed application into your LINE Official Account webhook. Doing that solves the deployment. Feel free to add the LINE account to use your own personal LINE scheduler!
 
-## Automated CRON Setup
+## Automated Cron Setup
 
-CRON is used to schedule timers of when Anzu would remind its users about tasks to be done. Like a true scheduler bot, cronjobs are run at the following times (GMT +7 time):
+Cron is used to schedule timers of when Anzu would remind its users about tasks to be done. Like a true scheduler bot, cronjobs are run at the following times (GMT +7 time):
 
 - 01:00 (to clean up expired tasks)
 - 17:00 (to remind a user / group / room about a task)
 
 If you have a paid LINE subscription, you can add more reminders. However, as I am stuck with the free version, I'll keep them at two reminders per day.
 
-A note to keep in mind that if there are no expired tasks, Anzu will not notify anything at 01:00. This is done so that the bandwith is not wasted.
+A note to keep in mind that if there are no expired tasks, Anzu will not notify anything at 01:00. This is done so that the bandwith is not wasted. Another thing to note is that by default, this application uses the compact reminder function for the schedulers (refer to `functions/scheduleFunctions`).
 
 We have to take into consideration that Heroku free dynos sleep every 30 minutes when our application is not running. When our application is sleeping, the cronjobs made with `node-cron` **will not run**.
 
@@ -197,14 +204,3 @@ I hereby offer thanks and credits to the following services and providers:
 - [LINE Developers](https://developers.line.biz/en/) for the API and LINE Services.
 
 Feel free to cite everything from this repository, as long as you give your credit. Anzu is not related in any way, shape, or form to my work or my research. Anzu is just a personal interest turned open source.
-
-## TODO
-
-- Make an environment variable that stores the bot name.
-- ~~Make an argument parser that is used to disable or enable protected routes.~~
-- ~~Add a `LICENSE`, and `CONTRIBUTING`, as a file, and as a reference in this documentation.~~
-- ~~Add a `Credits`, `Development`, `Architecture`, `Contribution`, `Commands List` and `Project Structure` in this `README.md` file for documentation.~~
-- Add screenshots for the repository.
-- ~~Create a function to group all of the output in the `responses` folder for easier maintainability.~~
-- ~~CircleCI Integration.~~
-- ~~Add badges to the README file.~~
