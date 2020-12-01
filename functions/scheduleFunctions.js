@@ -5,6 +5,22 @@ const parseNotification = require('../utils/parseNotification');
 const Task = require('../models/taskModel');
 const { transformResponse } = require('../utils/responseHelper');
 
+const compactReminder = async () => {
+  // 1. Get all distinct 'sourceIds'.
+  const sourceIds = await Task.find({}, 'sourceId').distinct('sourceId');
+
+  // 2. Send a push message.
+  await sourceIds.reduce(async (_, id) => {
+    // 1. Send a message to the client to open 'tasks'.
+    const messageToBeTransformed = transformResponse('compactReminder', []);
+    const response = createResponse(messageToBeTransformed);
+
+    // 2. Wait 2 seconds to prevent 'tooManyRequests' error.
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    return await client.pushMessage(id, response);
+  });
+};
+
 const reminder = async () => {
   // 1. Get all distinct 'sourceIds'. Will return an array filled with 'sourceId'.
   const sourceIds = await Task.find({}, 'sourceId').distinct('sourceId');
@@ -103,7 +119,11 @@ exports.initializeCron = () => {
     cron.schedule(
       schedule,
       async () => {
-        await reminder();
+        if (process.argv[3] === '--enable-long-reminder') {
+          await reminder();
+        } else {
+          await compactReminder();
+        }
       },
       settings
     );
