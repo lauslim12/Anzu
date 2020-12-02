@@ -10,25 +10,30 @@ const compactReminder = async () => {
   const sourceIds = await Task.find({}, 'sourceId').distinct('sourceId');
 
   // 2. Send a push message.
-  await sourceIds.reduce(async (_, id) => {
+  // Sequential loop is required.
+  /* eslint-disable no-await-in-loop */
+  for (let i = 0; i < sourceIds.length; i += 1) {
     // 1. Send a message to the client to open 'tasks'.
     const messageToBeTransformed = transformResponse('compactReminder', []);
     const response = createResponse(messageToBeTransformed);
 
     // 2. Wait 2 seconds to prevent 'tooManyRequests' error.
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    return await client.pushMessage(id, response);
-  });
+    await client.pushMessage(sourceIds[i], response);
+  }
+  /* eslint-enable no-await-in-loop */
 };
 
 const reminder = async () => {
   // 1. Get all distinct 'sourceIds'. Will return an array filled with 'sourceId'.
   const sourceIds = await Task.find({}, 'sourceId').distinct('sourceId');
 
-  // 2. Send a push message that reminds them of their schedules.
-  await sourceIds.reduce(async (_, id) => {
+  // Create a sequential loop to prevent 'Too Many Requests' error.
+  // We're going to use a normal 'for' loop, refactor later with 'reduce' for readability.
+  /* eslint-disable no-await-in-loop */
+  for (let i = 0; i < sourceIds.length; i += 1) {
     // 1. Call the tasks for the group.
-    const tasks = await Task.find({ sourceId: id });
+    const tasks = await Task.find({ sourceId: sourceIds[i] });
 
     // 2. Sort the tasks based on date for easier reading.
     // Sort from the closest deadline to the furthest deadline!
@@ -50,8 +55,9 @@ const reminder = async () => {
 
     // 5. Wait 2 seconds before sending a message (prevent too many requests error).
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    return await client.pushMessage(id, response);
-  }, Promise.resolve(null));
+    await client.pushMessage(sourceIds[i], response);
+  }
+  /* eslint-enable no-await-in-loop */
 };
 
 const cleanUpExpiredSchedules = async () => {
@@ -64,10 +70,11 @@ const cleanUpExpiredSchedules = async () => {
   );
 
   // Create a sequential loop to prevent 'Too Many Requests' error.
-  await sourceIds.reduce(async (_, id) => {
+  /* eslint-disable no-await-in-loop */
+  for (let i = 0; i < sourceIds.length; i += 1) {
     // 1. Get all tasks that are about to be deleted.
     const deadlines = await Task.find({
-      sourceId: id,
+      sourceId: sourceIds[i],
       deadline: { $lt: currentDate },
     });
 
@@ -97,8 +104,9 @@ const cleanUpExpiredSchedules = async () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // 6. Send response.
-    return await client.pushMessage(id, response);
-  }, Promise.resolve(null));
+    return await client.pushMessage(sourceIds[i], response);
+  }
+  /* eslint-enable no-await-in-loop */
 
   // 3. Delete every tasks that have expired.
   await Task.deleteMany({ deadline: { $lt: currentDate } });
