@@ -24,7 +24,7 @@ exports.scheduleTask = async (event) => {
   const task = splitText.splice(2).join(' ');
 
   // 2. If there are any errors, resolve the function.
-  if (isDateValid(chosenDate)) {
+  if (!isDateValid(chosenDate)) {
     throw new AppError(
       'Invalid date! Please enter date in YYYY-MM-DD format!',
       400,
