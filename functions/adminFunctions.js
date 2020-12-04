@@ -2,6 +2,7 @@ const { client } = require('../utils/credentialHandler');
 const createResponse = require('../utils/createResponse');
 const getSourceId = require('../utils/getSourceId');
 const Task = require('../models/taskModel');
+const { transformResponse } = require('../utils/responseHelper');
 
 // exports.disable = async (event) => {};
 
@@ -10,7 +11,9 @@ exports.purge = async (event) => {
   await Task.deleteMany();
 
   // 2. Notify the administrator.
-  const response = createResponse('Alright, all of the data has been purged!');
+  const message = transformResponse('purge', []);
+  const response = createResponse(message);
+
   await client.replyMessage(event.replyToken, response);
 };
 
@@ -20,7 +23,9 @@ exports.cleanExpired = async (event) => {
   await Task.deleteMany({ deadline: { $lt: currentDate } });
 
   // 2. Send response.
-  const response = createResponse('All expired data have been deleted!');
+  const message = transformResponse('cleanExpired', []);
+  const response = createResponse(message);
+
   await client.replyMessage(event.replyToken, response);
 };
 
@@ -31,15 +36,18 @@ exports.cleanLocally = async (event) => {
   await Task.deleteMany({ sourceId: sourceId });
 
   // 2. Send response.
-  const response = createResponse(
-    'All data in this environment have been deleted!'
-  );
+  const message = transformResponse('cleanLocally', []);
+  const response = createResponse(message);
+
   await client.replyMessage(event.replyToken, response);
 };
 
 // exports.leave = async (event) => {};
 
 exports.administrator = async (event) => {
-  const response = createResponse('Hello Administrator! How are you?');
+  // 1. If a user is an administrator, accept and send response.
+  const message = createResponse('administrator', []);
+  const response = createResponse(message);
+
   await client.replyMessage(event.replyToken, response);
 };
