@@ -29,7 +29,8 @@ const apiCall = async (event) => {
     if (
       text.startsWith('System Call: Purge') ||
       text.startsWith('System Call: Administrator') ||
-      text.startsWith('System Call: Delete Expired')
+      text.startsWith('System Call: Delete Expired') ||
+      text.startsWith('System Call: Local Deletion')
     ) {
       featureGuard(event);
     }
@@ -77,6 +78,10 @@ const apiCall = async (event) => {
 
     if (text.startsWith('System Call: Delete Expired')) {
       await adminFunctions.cleanExpired(event);
+    }
+
+    if (text.startsWith('System Call: Local Deletion')) {
+      await adminFunctions.cleanLocally(event);
     }
   } catch (err) {
     await errorFunctions(err);

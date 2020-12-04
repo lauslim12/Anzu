@@ -1,5 +1,6 @@
 const { client } = require('../utils/credentialHandler');
 const createResponse = require('../utils/createResponse');
+const getSourceId = require('../utils/getSourceId');
 const Task = require('../models/taskModel');
 
 // exports.disable = async (event) => {};
@@ -20,6 +21,19 @@ exports.cleanExpired = async (event) => {
 
   // 2. Send response.
   const response = createResponse('All expired data have been deleted!');
+  await client.replyMessage(event.replyToken, response);
+};
+
+exports.cleanLocally = async (event) => {
+  const { sourceId } = getSourceId(event);
+
+  // 1. Clean all tasks in an envionment, manually.
+  await Task.deleteMany({ sourceId: sourceId });
+
+  // 2. Send response.
+  const response = createResponse(
+    'All data in this environment have been deleted!'
+  );
   await client.replyMessage(event.replyToken, response);
 };
 

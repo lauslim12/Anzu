@@ -52,6 +52,7 @@ Several administrator commands are also available for testing the bot.
 - `System Call: Purge` is used to clear the whole database.
 - `System Call: Administrator` is used to check if the user saying that passphrase is an administrator or not.
 - `System Call: Delete Expired` is used to delete all expired tasks, manually.
+- `System Call: Local Deletion` is used to delete all tasks in an environment.
 
 Anzu comes with several error-handling methods. It is impossible to create a task whose deadline is less than the current date. Deleting tasks that does not exist in the current environment that Anzu is in is also impossible. Refer below for usage examples.
 
