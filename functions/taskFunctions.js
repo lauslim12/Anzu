@@ -172,6 +172,7 @@ exports.rescheduleTask = async (event) => {
     taskName,
     readableDateString,
   ]);
+  const response = createResponse(message);
 
-  await client.replyMessage(event.replyToken, message);
+  await client.replyMessage(event.replyToken, response);
 };
