@@ -28,7 +28,8 @@ const apiCall = async (event) => {
     // 4. Feature guard: if below routes match, apply filter guard first.
     if (
       text.startsWith('System Call: Purge') ||
-      text.startsWith('System Call: Administrator')
+      text.startsWith('System Call: Administrator') ||
+      text.startsWith('System Call: Delete Expired')
     ) {
       featureGuard(event);
     }
@@ -72,6 +73,10 @@ const apiCall = async (event) => {
 
     if (text.startsWith('System Call: Administrator')) {
       await adminFunctions.administrator(event);
+    }
+
+    if (text.startsWith('System Call: Delete Expired')) {
+      await adminFunctions.cleanExpired(event);
     }
   } catch (err) {
     await errorFunctions(err);
