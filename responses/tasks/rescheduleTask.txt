@@ -1,0 +1,1 @@
+Thank you! Your task of '<%MESSAGE0%>' has been rescheduled to '<%MESSAGE1%>'!

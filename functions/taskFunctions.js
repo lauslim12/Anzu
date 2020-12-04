@@ -124,3 +124,54 @@ exports.deleteScheduledTask = async (event) => {
 
   await client.replyMessage(event.replyToken, response);
 };
+
+exports.rescheduleTask = async (event) => {
+  // 1. Fetch the name of the task.
+  // Example: '/reschedule <newDate> <taskName>'
+  const { sourceId } = getSourceId(event);
+  const taskString = event.message.text.split(' ');
+  const taskDate = taskString[1];
+  const taskName = taskString.splice(2).join(' ');
+
+  // 2. If there are any errors, resolve the function.
+  const task = await Task.find({ sourceId: sourceId, name: taskName });
+
+  if (isArrayEmpty(task)) {
+    throw new AppError(
+      'The task that you want to reschedule does not exist!',
+      400,
+      event
+    );
+  }
+
+  if (!isDateValid(taskDate)) {
+    throw new AppError(
+      'Invalid date! Please enter date in YYYY-MM-DD format!',
+      400,
+      event
+    );
+  }
+
+  if (isDateLessThanToday(taskDate)) {
+    throw new AppError(
+      'You can only assign a task whose deadline is today or greater than today!',
+      400,
+      event
+    );
+  }
+
+  // 3. Update the task.
+  await Task.updateOne(
+    { sourceId: sourceId, name: taskName },
+    { deadline: new Date(taskDate) }
+  );
+
+  // 4. Send response.
+  const readableDateString = new Date(taskDate).toISOString().split('T')[0];
+  const message = transformResponse('rescheduleTask', [
+    taskName,
+    readableDateString,
+  ]);
+
+  await client.replyMessage(event.replyToken, message);
+};

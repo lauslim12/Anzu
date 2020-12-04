@@ -38,7 +38,8 @@ const apiCall = async (event) => {
     if (
       (text.startsWith('/schedule') ||
         text.startsWith('/delete') ||
-        text.startsWith('/leave')) &&
+        text.startsWith('/leave') ||
+        text.startsWith('/reschedule')) &&
       process.argv[2] !== '--disable-administrator'
     ) {
       featureGuard(event);
@@ -54,6 +55,10 @@ const apiCall = async (event) => {
 
     if (text.startsWith('/delete')) {
       await taskFunctions.deleteScheduledTask(event);
+    }
+
+    if (text.startsWith('/reschedule')) {
+      await taskFunctions.rescheduleTask(event);
     }
 
     if (text.startsWith('/help')) {

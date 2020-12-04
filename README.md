@@ -44,6 +44,7 @@ Anzu is available for the following commands.
 - `/schedule <deadline> <job_name>` to schedule your tasks.
 - `/tasks` to show all available tasks.
 - `/delete <job_name>` to delete available tasks in the current environment (room / group / personal).
+- `/reschedule <new_deadline> <job_name>` is used to reschedule a task in an environment.
 - `/help` to spawn the help menu.
 - `/leave` to make Anzu leave.
 
@@ -64,6 +65,7 @@ Following are the example usage of Anzu.
 - `/schedule 1234567890` will fail as it is not a valid date.
 - `/schedule 1970-01-01 Linux Epoch Time` will fail as it is less than the current date.
 - `/delete randomJob` will fail if `randomJob` does not exist in the current group, room, or personal environment.
+- `/reschedule 2021-01-01 First day of new year` will return successfully if `First day of new year` task exists in the environment, and assuming the date is less than `2021-01-01`. The date validation also works here.
 
 ## Project Structure
 
