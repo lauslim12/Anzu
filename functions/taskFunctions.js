@@ -2,6 +2,12 @@ const AppError = require('../utils/appError');
 const { client } = require('../utils/credentialHandler');
 const createResponse = require('../utils/createResponse');
 const getSourceId = require('../utils/getSourceId');
+const {
+  isStringEmpty,
+  isDateLessThanToday,
+  isDateValid,
+  isArrayEmpty,
+} = require('../utils/generalUtilities');
 const parseNotification = require('../utils/parseNotification');
 const Task = require('../models/taskModel');
 const { transformResponse } = require('../utils/responseHelper');
@@ -18,7 +24,7 @@ exports.scheduleTask = async (event) => {
   const task = splitText.splice(2).join(' ');
 
   // 2. If there are any errors, resolve the function.
-  if (Number.isNaN(Date.parse(chosenDate))) {
+  if (isDateValid(chosenDate)) {
     throw new AppError(
       'Invalid date! Please enter date in YYYY-MM-DD format!',
       400,
@@ -26,7 +32,7 @@ exports.scheduleTask = async (event) => {
     );
   }
 
-  if (chosenDate < new Date(Date.now()).toISOString().split('T')[0]) {
+  if (isDateLessThanToday(chosenDate)) {
     throw new AppError(
       'You can only assign a task whose deadline is today or greater than today!',
       400,
@@ -34,7 +40,7 @@ exports.scheduleTask = async (event) => {
     );
   }
 
-  if (!task || task.length === 0) {
+  if (isStringEmpty(task)) {
     throw new AppError('Please specify the task name!', 400, event);
   }
 
@@ -48,10 +54,8 @@ exports.scheduleTask = async (event) => {
   });
 
   // 4. Send back response to the user.
-  const message = transformResponse('scheduleTask', [
-    task,
-    new Date(chosenDate).toISOString().split('T')[0],
-  ]);
+  const readableDateString = new Date(chosenDate).toISOString().split('T')[0];
+  const message = transformResponse('scheduleTask', [task, readableDateString]);
   const response = createResponse(message);
 
   await client.replyMessage(event.replyToken, response);
@@ -79,7 +83,7 @@ exports.getScheduledTasks = async (event) => {
   });
 
   // If there are no tasks, give this message for clarity.
-  if (tasks.length === 0) {
+  if (isArrayEmpty(tasks)) {
     message = 'You have no tasks due!';
   } else {
     message = taskDeadlines.join('\n');
@@ -103,7 +107,7 @@ exports.deleteScheduledTask = async (event) => {
   // 2. Check if task exists based on name and its sourceId.
   const task = await Task.find({ name: taskName, sourceId: sourceId });
 
-  if (task.length === 0) {
+  if (isArrayEmpty(task)) {
     throw new AppError(
       'The task that you want to delete does not exist!',
       400,

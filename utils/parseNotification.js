@@ -1,6 +1,8 @@
+const { isObjectEmpty } = require('./generalUtilities');
+
 // Types: 'reminder' and 'cleaning up'.
 module.exports = (element, index, type) => {
-  if (!element) {
+  if (isObjectEmpty(element)) {
     return;
   }
 

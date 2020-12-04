@@ -1,6 +1,7 @@
 const cron = require('node-cron');
 const { client } = require('../utils/credentialHandler');
 const createResponse = require('../utils/createResponse');
+const { isArrayEmpty } = require('../utils/generalUtilities');
 const parseNotification = require('../utils/parseNotification');
 const Task = require('../models/taskModel');
 const { transformResponse } = require('../utils/responseHelper');
@@ -79,9 +80,11 @@ const cleanUpExpiredSchedules = async () => {
     });
 
     // 2. Added feature: no need to notify if there are no expired tasks.
-    if (deadlines.length === 0) {
-      return;
+    /* eslint-disable no-continue */
+    if (isArrayEmpty(deadlines)) {
+      continue;
     }
+    /* eslint-enable no-continue */
 
     // 3. Parse notification for every tasks to be deleted.
     const tasksToBeNotified = [];
@@ -104,7 +107,7 @@ const cleanUpExpiredSchedules = async () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // 6. Send response.
-    return await client.pushMessage(sourceIds[i], response);
+    await client.pushMessage(sourceIds[i], response);
   }
   /* eslint-enable no-await-in-loop */
 
