@@ -176,3 +176,31 @@ exports.rescheduleTask = async (event) => {
 
   await client.replyMessage(event.replyToken, response);
 };
+
+exports.finishTask = async (event) => {
+  // 1. Process input.
+  // Example: '/finish taskName'
+  const { sourceId } = getSourceId(event);
+  const taskString = event.message.text.split(' ');
+  const taskName = taskString.splice(1).join(' ');
+
+  // 2. Check for task availability.
+  const task = await Task.find({ sourceId: sourceId, name: taskName });
+
+  if (isArrayEmpty(task)) {
+    throw new Error(
+      'The task that you want to finish does not exists!',
+      400,
+      event
+    );
+  }
+
+  // 3. If there is a task with that name, solve it.
+  await Task.deleteOne({ sourceId: sourceId, name: taskName });
+
+  // 4. Send response to the user.
+  const message = transformResponse('finishTask', [taskName]);
+  const response = createResponse(message);
+
+  await client.replyMessage(event.replyToken, response);
+};

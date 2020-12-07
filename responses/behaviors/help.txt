@@ -4,9 +4,10 @@ Anzu is available for the following commands:
 2. (/tasks) to show all available tasks
 3. (/delete <job_name>) to delete available tasks in this environment
 4. (/reschedule <new_deadline> <job_name>) to reschedule a task in this environment to a new deadline
-5. (/help) to spawn the help menu
-6. (/leave) to make me leave (if on a group or multi-chat environment)
-7. Just mention my name in the chat (Anzu) and I will return to you!
+5. (/finish <job_name>) to finish a job. This is the same as deleting a task, but with a different message
+6. (/help) to spawn the help menu
+7. (/leave) to make me leave (if on a group or multi-chat environment)
+8. Just mention my name in the chat (Anzu) and I will return to you!
 
 Several examples:
 
