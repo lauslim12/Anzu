@@ -46,7 +46,7 @@ exports.cleanLocally = async (event) => {
 
 exports.administrator = async (event) => {
   // 1. If a user is an administrator, accept and send response.
-  const message = createResponse('administrator', []);
+  const message = transformResponse('administrator', []);
   const response = createResponse(message);
 
   await client.replyMessage(event.replyToken, response);
