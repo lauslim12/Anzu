@@ -6,12 +6,12 @@ orbs:
 jobs:
   deploy:
     executor: heroku/default
+
+    working_directory: ~/Anzu
+
     steps:
       - checkout
       - heroku/install
-      - run:
-          name: Verifying Heroku Installation
-          command: echo "Heroku installation successfull!"
       - heroku/deploy-via-git
 
 workflows:
