@@ -188,7 +188,7 @@ exports.finishTask = async (event) => {
   const task = await Task.find({ sourceId: sourceId, name: taskName });
 
   if (isArrayEmpty(task)) {
-    throw new Error(
+    throw new AppError(
       'The task that you want to finish does not exists!',
       400,
       event
