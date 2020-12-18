@@ -1,4 +1,13 @@
-const mongoose = require('mongoose');
+import mongoose, { Document } from 'mongoose';
+
+interface TaskType extends Document {
+  sourceId: string;
+  name: string;
+  deadline: Date;
+  scheduler: string;
+  sourceType: string;
+  dateAdded: Date;
+}
 
 const taskSchema = new mongoose.Schema({
   sourceId: {
@@ -28,6 +37,6 @@ const taskSchema = new mongoose.Schema({
   },
 });
 
-const Task = mongoose.model('Task', taskSchema);
+const Task = mongoose.model<TaskType>('Task', taskSchema);
 
-module.exports = Task;
+export default Task;
