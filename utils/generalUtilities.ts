@@ -49,10 +49,9 @@ export const isDateValid = (dateString: string): boolean => {
 
 // Check if date is lower than the current date.
 export const isDateLessThanToday = (dateString: string): boolean => {
-  const currentDate = new Date(Date.now());
-  const givenDateString = new Date(dateString);
+  const currentDate = new Date(Date.now()).toISOString().split('T')[0];
 
-  if (givenDateString.getTime() < currentDate.getTime()) {
+  if (dateString < currentDate) {
     return true;
   }
 
