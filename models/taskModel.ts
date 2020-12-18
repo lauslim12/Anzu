@@ -6,7 +6,7 @@ interface TaskType extends Document {
   deadline: Date;
   scheduler: string;
   sourceType: string;
-  dateAdded: Date;
+  dateAdded?: Date;
 }
 
 const taskSchema = new mongoose.Schema({
