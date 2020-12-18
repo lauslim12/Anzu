@@ -202,7 +202,7 @@ export const finishTask = async (data: DataToBeProcessed): Promise<void> => {
   }
 
   // 3. If there is a task with that name, solve it.
-  await Task.deleteOne({ sourceId: data.sourceType, name: taskName });
+  await Task.deleteOne({ sourceId: data.sourceId, name: taskName });
 
   // 4. Send response to the user.
   const message = transformResponse('finishTask', [taskName]);
