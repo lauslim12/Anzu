@@ -1,11 +1,10 @@
 import { WebhookEvent } from '@line/bot-sdk';
+import * as adminFunctions from '../functions/adminFunctions';
+import * as behaviorFunctions from '../functions/behaviorFunctions';
+import operationalErrorHandler from '../functions/errorFunctions';
 import featureGuard from '../utils/featureGuard';
 import getSourceId from '../utils/getSourceId';
-
-const adminFunctions = require('../functions/adminFunctions');
-const behaviorFunctions = require('../functions/behaviorFunctions');
-const errorFunctions = require('../functions/errorFunctions');
-const taskFunctions = require('../functions/taskFunctions');
+import * as taskFunctions from '../functions/taskFunctions';
 
 type DataToBeProcessed = {
   sourceId: string;
@@ -15,14 +14,35 @@ type DataToBeProcessed = {
   replyToken: string;
 };
 
+type BehaviorDataToBeProcessed = {
+  sourceId: string;
+  sourceType: string;
+  replyToken: string;
+};
+
 const apiCall = async (event: WebhookEvent): Promise<null | void> => {
+  // Prepare initial variables for 'JoinEvent' and 'FollowEvent'.
+  const { sourceId, sourceType } = getSourceId(event.source);
+
   // 1. Our 'event handler' that will catch any events other than 'message' events.
   if (event.type === 'join') {
-    await behaviorFunctions.join(event);
+    const behaviorDataToBeProcessed: BehaviorDataToBeProcessed = {
+      sourceId,
+      sourceType,
+      replyToken: event.replyToken,
+    };
+
+    await behaviorFunctions.join(behaviorDataToBeProcessed);
   }
 
   if (event.type === 'follow') {
-    await behaviorFunctions.added(event);
+    const behaviorDataToBeProcessed: BehaviorDataToBeProcessed = {
+      sourceId,
+      sourceType,
+      replyToken: event.replyToken,
+    };
+
+    await behaviorFunctions.added(behaviorDataToBeProcessed);
   }
 
   // 2. Check if invalid input or invalid event type, Anzu does not need to respond.
@@ -35,7 +55,6 @@ const apiCall = async (event: WebhookEvent): Promise<null | void> => {
   if (event.type === 'message') {
     // Prepare our variables to be processed in the subfunctions.
     const { text } = event.message;
-    const { sourceId, sourceType } = getSourceId(event.source);
     const dataToBeProcessed: DataToBeProcessed = {
       sourceId,
       sourceType,
@@ -93,39 +112,41 @@ const apiCall = async (event: WebhookEvent): Promise<null | void> => {
       }
 
       if (text.startsWith('/help')) {
-        await behaviorFunctions.help(event);
+        await behaviorFunctions.help(dataToBeProcessed);
       }
 
       if (text.startsWith('/leave')) {
-        await behaviorFunctions.leave(event);
+        await behaviorFunctions.leave(dataToBeProcessed);
       }
 
       if (text.includes('Anzu') || text.includes('anzu')) {
-        await behaviorFunctions.anzuSpeaks(event);
+        await behaviorFunctions.anzuSpeaks(dataToBeProcessed);
       }
 
       if (text.startsWith('System Call: Purge')) {
-        await adminFunctions.purge(event);
+        await adminFunctions.purge(dataToBeProcessed);
       }
 
       if (text.startsWith('System Call: Administrator')) {
-        await adminFunctions.administrator(event);
+        await adminFunctions.administrator(dataToBeProcessed);
       }
 
       if (text.startsWith('System Call: Delete Expired')) {
-        await adminFunctions.cleanExpired(event);
+        await adminFunctions.cleanExpired(dataToBeProcessed);
       }
 
       if (text.startsWith('System Call: Local Deletion')) {
-        await adminFunctions.cleanLocally(event);
+        await adminFunctions.cleanLocally(dataToBeProcessed);
       }
-    } catch (err) {
-      await errorFunctions(err);
 
       /* eslint-disable no-console */
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+    } catch (err: any) {
+      await operationalErrorHandler(err);
       console.error(err.message);
-      /* eslint-enable no-console */
     }
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+    /* eslint-enable no-console */
 
     return Promise.resolve(null);
   }
