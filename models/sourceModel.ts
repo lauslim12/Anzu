@@ -28,4 +28,4 @@ sourceSchema.path('sourceId').index({ unique: true });
 
 const Source = mongoose.model<SourceType>('Source', sourceSchema);
 
-module.exports = Source;
+export default Source;
