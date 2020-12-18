@@ -1,23 +1,34 @@
-const { client } = require('../utils/credentialHandler');
-const createResponse = require('../utils/createResponse');
-const getSourceId = require('../utils/getSourceId');
-const Task = require('../models/taskModel');
-const { transformResponse } = require('../utils/responseHelper');
+import { client } from '../utils/credentialHandler';
+import createResponse from '../utils/createResponse';
+import Task from '../models/taskModel';
+import { transformResponse } from '../utils/responseHelper';
+
+type DataToBeProcessed = {
+  sourceId: string;
+  sourceType: string;
+  command: string;
+  scheduler: string;
+  replyToken: string;
+};
 
 // exports.disable = async (event) => {};
 
-exports.purge = async (event) => {
+export const purge = async ({
+  replyToken,
+}: DataToBeProcessed): Promise<void> => {
   // 1. After the administrator says 'System Call: Purge', clean all the database.
-  await Task.deleteMany();
+  await Task.deleteMany({});
 
   // 2. Notify the administrator.
   const message = transformResponse('purge', []);
   const response = createResponse(message);
 
-  await client.replyMessage(event.replyToken, response);
+  await client.replyMessage(replyToken, response);
 };
 
-exports.cleanExpired = async (event) => {
+export const cleanExpired = async ({
+  replyToken,
+}: DataToBeProcessed): Promise<void> => {
   // 1. Clean all expired tasks, manually.
   const currentDate = new Date(Date.now());
   await Task.deleteMany({ deadline: { $lt: currentDate } });
@@ -26,12 +37,13 @@ exports.cleanExpired = async (event) => {
   const message = transformResponse('cleanExpired', []);
   const response = createResponse(message);
 
-  await client.replyMessage(event.replyToken, response);
+  await client.replyMessage(replyToken, response);
 };
 
-exports.cleanLocally = async (event) => {
-  const { sourceId } = getSourceId(event);
-
+export const cleanLocally = async ({
+  sourceId,
+  replyToken,
+}: DataToBeProcessed): Promise<void> => {
   // 1. Clean all tasks in an envionment, manually.
   await Task.deleteMany({ sourceId: sourceId });
 
@@ -39,15 +51,17 @@ exports.cleanLocally = async (event) => {
   const message = transformResponse('cleanLocally', []);
   const response = createResponse(message);
 
-  await client.replyMessage(event.replyToken, response);
+  await client.replyMessage(replyToken, response);
 };
 
 // exports.leave = async (event) => {};
 
-exports.administrator = async (event) => {
+export const administrator = async ({
+  replyToken,
+}: DataToBeProcessed): Promise<void> => {
   // 1. If a user is an administrator, accept and send response.
   const message = transformResponse('administrator', []);
   const response = createResponse(message);
 
-  await client.replyMessage(event.replyToken, response);
+  await client.replyMessage(replyToken, response);
 };

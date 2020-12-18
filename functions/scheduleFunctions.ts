@@ -1,12 +1,12 @@
-const cron = require('node-cron');
-const { client } = require('../utils/credentialHandler');
-const createResponse = require('../utils/createResponse');
-const { isArrayEmpty } = require('../utils/generalUtilities');
-const parseNotification = require('../utils/parseNotification');
-const Task = require('../models/taskModel');
-const { transformResponse } = require('../utils/responseHelper');
+import cron, { ScheduleOptions } from 'node-cron';
+import { client } from '../utils/credentialHandler';
+import createResponse from '../utils/createResponse';
+import { isArrayEmpty } from '../utils/generalUtilities';
+import parseNotification from '../utils/parseNotification';
+import Task from '../models/taskModel';
+import { transformResponse } from '../utils/responseHelper';
 
-const compactReminder = async () => {
+const compactReminder = async (): Promise<void> => {
   // 1. Get all distinct 'sourceIds'.
   const sourceIds = await Task.find({}, 'sourceId').distinct('sourceId');
 
@@ -25,7 +25,7 @@ const compactReminder = async () => {
   /* eslint-enable no-await-in-loop */
 };
 
-const reminder = async () => {
+const reminder = async (): Promise<void> => {
   // 1. Get all distinct 'sourceIds'. Will return an array filled with 'sourceId'.
   const sourceIds = await Task.find({}, 'sourceId').distinct('sourceId');
 
@@ -38,13 +38,16 @@ const reminder = async () => {
 
     // 2. Sort the tasks based on date for easier reading.
     // Sort from the closest deadline to the furthest deadline!
-    tasks.sort((el1, el2) => new Date(el1.deadline) - new Date(el2.deadline));
+    tasks.sort(
+      (el1, el2) =>
+        new Date(el1.deadline).getTime() - new Date(el2.deadline).getTime()
+    );
 
     // 3. Process them as a string to be sent.
-    const taskDeadlines = [];
+    const taskDeadlines: string[] = [];
 
     tasks.forEach((e, index) => {
-      taskDeadlines.push(parseNotification(e, index + 1, 'reminder'));
+      taskDeadlines.push(parseNotification(e, index + 1, 'reminder') || '');
     });
 
     // It is impossible to get no tasks for an existing sourceId.
@@ -61,7 +64,7 @@ const reminder = async () => {
   /* eslint-enable no-await-in-loop */
 };
 
-const cleanUpExpiredSchedules = async () => {
+const cleanUpExpiredSchedules = async (): Promise<void> => {
   // 1. Get current date.
   const currentDate = new Date(Date.now());
 
@@ -87,10 +90,12 @@ const cleanUpExpiredSchedules = async () => {
     /* eslint-enable no-continue */
 
     // 3. Parse notification for every tasks to be deleted.
-    const tasksToBeNotified = [];
+    const tasksToBeNotified: string[] = [];
 
     deadlines.forEach((e, index) => {
-      tasksToBeNotified.push(parseNotification(e, index + 1, 'cleaning up'));
+      tasksToBeNotified.push(
+        parseNotification(e, index + 1, 'cleaning up') || ''
+      );
     });
 
     // If there are no tasks, give this message for clarity.
@@ -115,12 +120,12 @@ const cleanUpExpiredSchedules = async () => {
   await Task.deleteMany({ deadline: { $lt: currentDate } });
 };
 
-exports.initializeCron = () => {
+const initializeCron = (): void => {
   // We are going to setup reminders at 17:00.
   // We are going to setup cleanup jobs at 01:00.
   const cleanUpSchedules = ['00 01 * * *'];
   const reminderSchedules = ['00 17 * * *'];
-  const settings = {
+  const settings: ScheduleOptions = {
     scheduled: true,
     timezone: 'Asia/Jakarta',
   };
@@ -159,3 +164,5 @@ exports.initializeCron = () => {
     );
   });
 };
+
+export default initializeCron;
