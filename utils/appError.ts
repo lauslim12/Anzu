@@ -1,8 +1,8 @@
 class AppError extends Error {
-  protected statusCode: number;
-  protected status: string;
-  protected isOperational: Boolean;
-  protected replyToken: string;
+  public statusCode: number;
+  public status: string;
+  public isOperational: Boolean;
+  public replyToken: string;
 
   constructor(message: string, statusCode: number, replyToken: string) {
     super(message);
