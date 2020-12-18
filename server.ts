@@ -1,9 +1,11 @@
 /* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Third party imports.
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import app from './application';
 
 // Personal Functions.
-const scheduleFunctions = require('./functions/scheduleFunctions');
+import initializeCron from './functions/scheduleFunctions';
 
 // Handle uncaught exceptions. Happens synchronously!
 process.on('uncaughtException', (err) => {
@@ -12,10 +14,7 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-// Server Setup.
-const app = require('./app');
-
-// Global Variables.
+// Server Setup and Global Variables.
 const PORT = process.env.PORT || 3000;
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
@@ -23,7 +22,7 @@ const DB = process.env.DATABASE.replace(
 );
 
 // CRON Setup.
-scheduleFunctions.initializeCron();
+initializeCron();
 console.log('Cronjobs setup successfully!');
 
 // Database Connection.
@@ -47,7 +46,7 @@ const server = app.listen(PORT, () => {
 });
 
 // Handle unhandled rejections --- the middleware stack will end here.
-process.on('unhandledRejection', (err) => {
+process.on('unhandledRejection', (err: any) => {
   console.log('Unhandled rejection 💥! Application shutting down!');
   console.log(err.name, err.message);
 
