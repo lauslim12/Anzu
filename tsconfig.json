@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "ES2017",
     "module": "commonjs",
     "outDir": "./dist/",
     "alwaysStrict": true,
@@ -11,8 +11,8 @@
     "resolveJsonModule": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
-    "allowJs": true
+    "allowJs": false,
+    "moduleResolution": "node"
   },
-  "include": ["./**/*"],
-  "exclude": ["node_modules/*"]
+  "include": ["./**/*.ts"]
 }
