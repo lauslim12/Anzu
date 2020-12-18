@@ -1,7 +1,16 @@
-const { isObjectEmpty } = require('./generalUtilities');
+import { isObjectEmpty } from './generalUtilities';
+
+type ElementType = {
+  deadline: Date;
+  name: String;
+};
 
 // Types: 'reminder' and 'cleaning up'.
-module.exports = (element, index, type) => {
+const parseNotification = (
+  element: ElementType,
+  index: number,
+  type: string
+): string | undefined => {
   if (isObjectEmpty(element)) {
     return;
   }
@@ -10,7 +19,7 @@ module.exports = (element, index, type) => {
 
   const currentTime = new Date(Date.now());
   const deadline = new Date(element.deadline);
-  const dateDifference = new Date(deadline - currentTime);
+  const dateDifference = new Date(deadline.getTime() - currentTime.getTime());
 
   // If the current date is the same as the deadline date, AND the type is 'reminder', print 'Today'.
   // The whitespace in the 'differenceInDays' variable is intentional.
@@ -32,3 +41,5 @@ module.exports = (element, index, type) => {
 
   return `${index}. ${element.name} (Deadline: ${formattedTime}${differenceInDays})`;
 };
+
+export default parseNotification;
