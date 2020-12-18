@@ -1,11 +1,13 @@
 // Check if an array is empty.
-export const isArrayEmpty = (list: Array<string | number>): boolean => {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export const isArrayEmpty = (list: any[]): boolean => {
   if (!Array.isArray(list) || !list.length) {
     return true;
   }
 
   return false;
 };
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 // Check if an object is empty.
 export const isObjectEmpty = (obj: Object): boolean => {
@@ -46,10 +48,11 @@ export const isDateValid = (dateString: string): boolean => {
 };
 
 // Check if date is lower than the current date.
-export const isDateLessThanToday = (dateString: Date): boolean => {
-  const currentDate = new Date(Date.now()).toISOString().split('T')[0];
+export const isDateLessThanToday = (dateString: string): boolean => {
+  const currentDate = new Date(Date.now());
+  const givenDateString = new Date(dateString);
 
-  if (dateString < currentDate) {
+  if (givenDateString.getTime() < currentDate.getTime()) {
     return true;
   }
 
@@ -57,8 +60,12 @@ export const isDateLessThanToday = (dateString: Date): boolean => {
 };
 
 // Check if a string is empty or only contains whitespace.
-export const isStringEmpty = (str: string): boolean => {
+export const isStringEmpty = (str: string | undefined): boolean => {
   if (!str || str.length === 0 || /^\s*$/.test(str)) {
+    return true;
+  }
+
+  if (str === undefined) {
     return true;
   }
 
