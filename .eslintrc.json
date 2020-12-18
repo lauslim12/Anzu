@@ -1,7 +1,19 @@
 {
-  "extends": ["airbnb", "prettier", "plugin:node/recommended"],
-  "plugins": ["prettier"],
+  "extends": ["airbnb-typescript/base", "prettier", "eslint-config-prettier"],
+  "plugins": ["eslint-plugin-prettier", "@typescript-eslint"],
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
   "rules": {
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/explicit-function-return-type": "error",
+    "@typescript-eslint/comma-dangle": "off",
     "prettier/prettier": "error",
     "spaced-comment": "off",
     "no-console": "warn",
@@ -15,8 +27,5 @@
     "class-methods-use-this": "off",
     "prefer-destructuring": ["error", { "object": true, "array": false }],
     "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }]
-  },
-  "parserOptions": {
-    "sourceType": "module"
   }
 }
