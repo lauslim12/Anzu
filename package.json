@@ -6,8 +6,8 @@
   "main": "server.js",
   "scripts": {
     "tsc": "tsc",
-    "prettier": "prettier --check --config ./.prettierrc ./**/*.js",
-    "lint": "npx eslint . --ext .js",
+    "format": "prettier --check --config ./.prettierrc ./**/*.{js,ts}",
+    "lint": "npx eslint . --ext .js --ext .ts",
     "start": "node ./dist/server.js",
     "production": "node server.js --disable-administrator --enable-long-reminder",
     "build": "tsc"
