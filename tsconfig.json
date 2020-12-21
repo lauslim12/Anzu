@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "noEmit": true,
+    "noEmit": false,
     "module": "commonjs",
     "outDir": "./dist",
     "alwaysStrict": true,

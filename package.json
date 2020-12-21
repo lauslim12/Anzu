@@ -11,7 +11,7 @@
     "lint": "npx eslint . --ext .js --ext .ts",
     "start": "node ./dist/server.js",
     "production": "node ./dist/server.js --disable-administrator --enable-long-reminder",
-    "build": "npm run clean && tsc && babel . --out-dir ./dist --extensions .ts"
+    "build": "npm run clean && tsc"
   },
   "repository": {
     "type": "git",
