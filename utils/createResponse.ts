@@ -1,9 +1,6 @@
-type ResponseHelperType = {
-  type: 'text';
-  text: string;
-};
+import { TextMessage } from '@line/bot-sdk';
 
-const createResponse = (message: string): ResponseHelperType => {
+const createResponse = (message: string): TextMessage => {
   return {
     type: 'text',
     text: message,
