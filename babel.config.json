@@ -1,0 +1,15 @@
+{
+  "presets": [
+    ["@babel/preset-typescript"],
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ]
+  ],
+  "plugins": ["@babel/transform-typescript"],
+  "ignore": ["node_modules"]
+}
