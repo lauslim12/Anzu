@@ -1,5 +1,6 @@
 import { WebhookEvent } from '@line/bot-sdk';
 import * as adminFunctions from '../functions/adminFunctions';
+import AppError from '../utils/appError';
 import * as behaviorFunctions from '../functions/behaviorFunctions';
 import operationalErrorHandler from '../functions/errorFunctions';
 import featureGuard from '../utils/featureGuard';
@@ -138,15 +139,17 @@ const apiCall = async (event: WebhookEvent): Promise<null | void> => {
       if (text.startsWith('System Call: Local Deletion')) {
         await adminFunctions.cleanLocally(dataToBeProcessed);
       }
+    } catch (err: unknown) {
+      if (err instanceof AppError) {
+        await operationalErrorHandler(err);
+      }
 
-      /* eslint-disable no-console */
-      /* eslint-disable @typescript-eslint/no-explicit-any */
-    } catch (err: any) {
-      await operationalErrorHandler(err);
-      console.error(err.message);
+      if (err instanceof Error) {
+        /* eslint-disable no-console */
+        console.error(err.message);
+        /* eslint-enable no-console */
+      }
     }
-    /* eslint-enable @typescript-eslint/no-explicit-any */
-    /* eslint-enable no-console */
 
     return Promise.resolve(null);
   }
