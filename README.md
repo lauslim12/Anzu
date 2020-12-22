@@ -61,7 +61,7 @@ Several administrator commands are also available for testing the bot.
 There is also a configuration file located at `constants/constants.ts`. Each of the values will do as follows.
 
 - `botName` is the default name of the bot. This can be changed, but currently it does nothing.
-- `disableAdministrator` is set by default to `false`. If this configuration is set to `true`, then the bot will allow anyone in the environment to schedule, finish, delete, and reschedule tasks. This flag also allows anyone to 'kick' or make the bot leave. `System Call`s are still restricted to administrators.
+- `disableAdministrator` is set by default to `true`. If this configuration is set to `false`, then the bot will allow anyone in the environment to schedule, finish, delete, and reschedule tasks. This flag also allows anyone to 'kick' or make the bot leave. `System Call`s are still restricted to administrators.
 - `enableLongReminders` is set by default to `true`. This configuration will cause the bot to send a reminder of all tasks in the current environment, instead of telling everyone in the current environment to use `/tasks`.
 - `timezone` is to set the bot timezone.
 - `cleanUpSchedules` is an array that will take _n_ values of cron syntaxes. This variable will be used to determine how many times and when the clean up routine will occur.

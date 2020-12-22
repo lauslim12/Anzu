@@ -3,7 +3,7 @@ import { AnzuConfigurationType } from '../types';
 // Deep freeze object to prevent changing on runtime.
 const personalAnzuConfigurations: AnzuConfigurationType = {
   botName: 'Anzu',
-  disableAdministrator: false,
+  disableAdministrator: true,
   enableLongReminders: true,
   timezone: 'Asia/Jakarta',
   cleanUpSchedules: ['00 01 * * *'],
