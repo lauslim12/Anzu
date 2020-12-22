@@ -1,49 +1,34 @@
 import { WebhookEvent } from '@line/bot-sdk';
 import * as adminFunctions from '../functions/adminFunctions';
 import AppError from '../utils/appError';
+import { BehaviorType, ScheduleType } from '../types';
 import * as behaviorFunctions from '../functions/behaviorFunctions';
 import operationalErrorHandler from '../functions/errorFunctions';
 import featureGuard from '../utils/featureGuard';
 import getSourceId from '../utils/getSourceId';
 import * as taskFunctions from '../functions/taskFunctions';
 
-type DataToBeProcessed = {
-  sourceId: string;
-  sourceType: string;
-  command: string;
-  scheduler: string;
-  replyToken: string;
-};
-
-type BehaviorDataToBeProcessed = {
-  sourceId: string;
-  sourceType: string;
-  replyToken: string;
-};
-
 const apiCall = async (event: WebhookEvent): Promise<null | void> => {
   // Prepare initial variables for 'JoinEvent' and 'FollowEvent'.
   const { sourceId, sourceType } = getSourceId(event.source);
 
   // 1. Our 'event handler' that will catch any events other than 'message' events.
-  if (event.type === 'join') {
-    const behaviorDataToBeProcessed: BehaviorDataToBeProcessed = {
+  if (event.type === 'join' || event.type === 'follow') {
+    // Prepare our variables.
+    const { replyToken } = event;
+
+    // Encapsulate them on an object for easier data processing.
+    const behaviorDataToBeProcessed: BehaviorType = {
       sourceId,
       sourceType,
-      replyToken: event.replyToken,
+      replyToken,
     };
 
-    await behaviorFunctions.join(behaviorDataToBeProcessed);
-  }
-
-  if (event.type === 'follow') {
-    const behaviorDataToBeProcessed: BehaviorDataToBeProcessed = {
-      sourceId,
-      sourceType,
-      replyToken: event.replyToken,
-    };
-
-    await behaviorFunctions.added(behaviorDataToBeProcessed);
+    if (event.type === 'join') {
+      await behaviorFunctions.join(behaviorDataToBeProcessed);
+    } else if (event.type === 'follow') {
+      await behaviorFunctions.added(behaviorDataToBeProcessed);
+    }
   }
 
   // 2. Check if invalid input or invalid event type, Anzu does not need to respond.
@@ -56,12 +41,16 @@ const apiCall = async (event: WebhookEvent): Promise<null | void> => {
   if (event.type === 'message') {
     // Prepare our variables to be processed in the subfunctions.
     const { text } = event.message;
-    const dataToBeProcessed: DataToBeProcessed = {
+    const { replyToken } = event;
+    const { userId } = event.source || '';
+
+    // Encapsulate our data to an object for better handling.
+    const dataToBeProcessed: ScheduleType = {
       sourceId,
       sourceType,
       command: text,
-      scheduler: event.source.userId || '',
-      replyToken: event.replyToken,
+      scheduler: userId,
+      replyToken,
     };
 
     try {
@@ -73,8 +62,8 @@ const apiCall = async (event: WebhookEvent): Promise<null | void> => {
         text.startsWith('System Call: Local Deletion')
       ) {
         featureGuard({
-          userId: event.source.userId,
-          replyToken: event.replyToken,
+          userId,
+          replyToken,
         });
       }
 
@@ -87,11 +76,12 @@ const apiCall = async (event: WebhookEvent): Promise<null | void> => {
         process.argv[2] !== '--disable-administrator'
       ) {
         featureGuard({
-          userId: event.source.userId,
-          replyToken: event.replyToken,
+          userId,
+          replyToken,
         });
       }
 
+      // Entering routes for schedules.
       if (text.startsWith('/schedule')) {
         await taskFunctions.scheduleTask(dataToBeProcessed);
       }
@@ -112,18 +102,26 @@ const apiCall = async (event: WebhookEvent): Promise<null | void> => {
         await taskFunctions.finishTask(dataToBeProcessed);
       }
 
+      // Entering routes for behavior functions.
+      const behaviorDataToBeProcessed: BehaviorType = {
+        sourceId,
+        sourceType,
+        replyToken,
+      };
+
       if (text.startsWith('/help')) {
-        await behaviorFunctions.help(dataToBeProcessed);
+        await behaviorFunctions.help(behaviorDataToBeProcessed);
       }
 
       if (text.startsWith('/leave')) {
-        await behaviorFunctions.leave(dataToBeProcessed);
+        await behaviorFunctions.leave(behaviorDataToBeProcessed);
       }
 
       if (text.includes('Anzu') || text.includes('anzu')) {
-        await behaviorFunctions.anzuSpeaks(dataToBeProcessed);
+        await behaviorFunctions.anzuSpeaks(behaviorDataToBeProcessed);
       }
 
+      // Entering routes for administrator functions.
       if (text.startsWith('System Call: Purge')) {
         await adminFunctions.purge(dataToBeProcessed);
       }

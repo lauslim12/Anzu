@@ -1,24 +1,11 @@
 import AppError from '../utils/appError';
+import { BehaviorType } from '../types';
 import { client } from '../utils/credentialHandler';
 import createResponse from '../utils/createResponse';
 import Source from '../models/sourceModel';
 import { transformResponse } from '../utils/responseHelper';
 
-type DataToBeProcessed = {
-  sourceId: string;
-  sourceType: string;
-  command: string;
-  scheduler: string;
-  replyToken: string;
-};
-
-type BehaviorDataToBeProcessed = {
-  sourceId: string;
-  sourceType: string;
-  replyToken: string;
-};
-
-export const added = async (data: BehaviorDataToBeProcessed): Promise<void> => {
+export const added = async (data: BehaviorType): Promise<void> => {
   // 1. If found duplicate, don't save.
   const source = await Source.findOne({
     sourceId: data.sourceId,
@@ -39,9 +26,7 @@ export const added = async (data: BehaviorDataToBeProcessed): Promise<void> => {
   await client.replyMessage(data.replyToken, response);
 };
 
-export const help = async ({
-  replyToken,
-}: DataToBeProcessed): Promise<void> => {
+export const help = async ({ replyToken }: BehaviorType): Promise<void> => {
   // 1. Simply send a help message.
   const message = transformResponse('help', []);
   const response = createResponse(message);
@@ -49,7 +34,7 @@ export const help = async ({
   await client.replyMessage(replyToken, response);
 };
 
-export const join = async (data: BehaviorDataToBeProcessed): Promise<void> => {
+export const join = async (data: BehaviorType): Promise<void> => {
   // 1. If found duplicate, don't save.
   const source = await Source.findOne({
     sourceId: data.sourceId,
@@ -72,7 +57,7 @@ export const join = async (data: BehaviorDataToBeProcessed): Promise<void> => {
 
 export const anzuSpeaks = async ({
   replyToken,
-}: DataToBeProcessed): Promise<void> => {
+}: BehaviorType): Promise<void> => {
   const message = transformResponse('anzuSpeaks', []);
   const response = createResponse(message);
 
@@ -83,7 +68,7 @@ export const leave = async ({
   sourceId,
   sourceType,
   replyToken,
-}: DataToBeProcessed): Promise<void> => {
+}: BehaviorType): Promise<void> => {
   if (sourceType !== 'room' && sourceType !== 'group') {
     throw new AppError(
       'Sorry, but you cannot kick me out from personal chats.',

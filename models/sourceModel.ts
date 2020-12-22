@@ -1,10 +1,5 @@
-import mongoose, { Document } from 'mongoose';
-
-interface SourceType extends Document {
-  sourceId: string;
-  sourceType: string;
-  dateAdded?: Date;
-}
+import mongoose from 'mongoose';
+import { SourceType } from '../types';
 
 const sourceSchema = new mongoose.Schema({
   sourceId: {

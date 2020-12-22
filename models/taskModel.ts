@@ -1,13 +1,5 @@
-import mongoose, { Document } from 'mongoose';
-
-interface TaskType extends Document {
-  sourceId: string;
-  name: string;
-  deadline: Date;
-  scheduler: string;
-  sourceType: string;
-  dateAdded?: Date;
-}
+import mongoose from 'mongoose';
+import { TaskType } from '../types';
 
 const taskSchema = new mongoose.Schema({
   sourceId: {

@@ -1,21 +1,12 @@
 import { client } from '../utils/credentialHandler';
 import createResponse from '../utils/createResponse';
+import { ScheduleType } from '../types';
 import Task from '../models/taskModel';
 import { transformResponse } from '../utils/responseHelper';
 
-type DataToBeProcessed = {
-  sourceId: string;
-  sourceType: string;
-  command: string;
-  scheduler: string;
-  replyToken: string;
-};
-
 // exports.disable = async (event) => {};
 
-export const purge = async ({
-  replyToken,
-}: DataToBeProcessed): Promise<void> => {
+export const purge = async ({ replyToken }: ScheduleType): Promise<void> => {
   // 1. After the administrator says 'System Call: Purge', clean all the database.
   await Task.deleteMany({});
 
@@ -28,7 +19,7 @@ export const purge = async ({
 
 export const cleanExpired = async ({
   replyToken,
-}: DataToBeProcessed): Promise<void> => {
+}: ScheduleType): Promise<void> => {
   // 1. Clean all expired tasks, manually.
   const currentDate = new Date(Date.now());
   await Task.deleteMany({ deadline: { $lt: currentDate } });
@@ -43,7 +34,7 @@ export const cleanExpired = async ({
 export const cleanLocally = async ({
   sourceId,
   replyToken,
-}: DataToBeProcessed): Promise<void> => {
+}: ScheduleType): Promise<void> => {
   // 1. Clean all tasks in an envionment, manually.
   await Task.deleteMany({ sourceId: sourceId });
 
@@ -58,7 +49,7 @@ export const cleanLocally = async ({
 
 export const administrator = async ({
   replyToken,
-}: DataToBeProcessed): Promise<void> => {
+}: ScheduleType): Promise<void> => {
   // 1. If a user is an administrator, accept and send response.
   const message = transformResponse('administrator', []);
   const response = createResponse(message);

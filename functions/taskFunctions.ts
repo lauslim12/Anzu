@@ -8,18 +8,11 @@ import {
   isArrayEmpty,
 } from '../utils/generalUtilities';
 import parseNotification from '../utils/parseNotification';
+import { ScheduleType } from '../types';
 import Task from '../models/taskModel';
 import { transformResponse } from '../utils/responseHelper';
 
-type DataToBeProcessed = {
-  sourceId: string;
-  sourceType: string;
-  command: string;
-  scheduler: string;
-  replyToken: string;
-};
-
-export const scheduleTask = async (data: DataToBeProcessed): Promise<void> => {
+export const scheduleTask = async (data: ScheduleType): Promise<void> => {
   // 1. Process the input from the user.
   // Example input: '/schedule 2020-12-12 Working from home!'
   const splitText = data.command.split(' ');
@@ -64,9 +57,7 @@ export const scheduleTask = async (data: DataToBeProcessed): Promise<void> => {
   await client.replyMessage(data.replyToken, response);
 };
 
-export const getScheduledTasks = async (
-  data: DataToBeProcessed
-): Promise<void> => {
+export const getScheduledTasks = async (data: ScheduleType): Promise<void> => {
   // Prepare message to reply with.
   let message: string;
 
@@ -104,7 +95,7 @@ export const getScheduledTasks = async (
 };
 
 export const deleteScheduledTask = async (
-  data: DataToBeProcessed
+  data: ScheduleType
 ): Promise<void> => {
   // 1. Fetch the name of the task.
   const taskString = data.command.split(' ');
@@ -131,9 +122,7 @@ export const deleteScheduledTask = async (
   await client.replyMessage(data.replyToken, response);
 };
 
-export const rescheduleTask = async (
-  data: DataToBeProcessed
-): Promise<void> => {
+export const rescheduleTask = async (data: ScheduleType): Promise<void> => {
   // 1. Fetch the name of the task.
   // Example: '/reschedule <newDate> <taskName>'
   const taskString = data.command.split(' ');
@@ -184,7 +173,7 @@ export const rescheduleTask = async (
   await client.replyMessage(data.replyToken, response);
 };
 
-export const finishTask = async (data: DataToBeProcessed): Promise<void> => {
+export const finishTask = async (data: ScheduleType): Promise<void> => {
   // 1. Process input.
   // Example: '/finish taskName'
   const taskString = data.command.split(' ');
