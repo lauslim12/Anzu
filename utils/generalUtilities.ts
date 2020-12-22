@@ -51,6 +51,10 @@ export const isDateValid = (dateString: string): boolean => {
 export const isDateLessThanToday = (dateString: string): boolean => {
   const currentDate = new Date(Date.now()).toISOString().split('T')[0];
 
+  if (currentDate === undefined) {
+    return false;
+  }
+
   if (dateString < currentDate) {
     return true;
   }

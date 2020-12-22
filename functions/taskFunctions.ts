@@ -19,6 +19,11 @@ export const scheduleTask = async (data: ScheduleType): Promise<void> => {
   const chosenDate = splitText[1];
   const task = splitText.splice(2).join(' ');
 
+  // Just in case of failure, we end the function instantly.
+  if (chosenDate === undefined) {
+    return;
+  }
+
   // 2. If there are any errors, resolve the function.
   if (!isDateValid(chosenDate)) {
     throw new AppError(
@@ -131,6 +136,11 @@ export const rescheduleTask = async (data: ScheduleType): Promise<void> => {
 
   // 2. If there are any errors, resolve the function.
   const task = await Task.find({ sourceId: data.sourceId, name: taskName });
+
+  // Just in case of failure, we end the function instantly.
+  if (taskDate === undefined) {
+    return;
+  }
 
   if (isArrayEmpty(task)) {
     throw new AppError(
