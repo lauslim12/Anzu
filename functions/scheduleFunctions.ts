@@ -3,6 +3,7 @@ import { client } from '../utils/credentialHandler';
 import createResponse from '../utils/createResponse';
 import { isArrayEmpty } from '../utils/generalUtilities';
 import parseNotification from '../utils/parseNotification';
+import personalAnzuConfigurations from '../constants';
 import Task from '../models/taskModel';
 import { transformResponse } from '../utils/responseHelper';
 
@@ -123,35 +124,28 @@ const cleanUpExpiredSchedules = async (): Promise<void> => {
 const initializeCron = (): void => {
   // We are going to setup reminders at 17:00.
   // We are going to setup cleanup jobs at 01:00.
-  const cleanUpSchedules = ['00 01 * * *'];
-  const reminderSchedules = ['00 17 * * *'];
+  const { cleanUpSchedules } = personalAnzuConfigurations;
+  const { reminderSchedules } = personalAnzuConfigurations;
+  const { timezone } = personalAnzuConfigurations;
   const settings: ScheduleOptions = {
     scheduled: true,
-    timezone: 'Asia/Jakarta',
+    timezone,
   };
 
   // For reminders, we are going to iterate through the 'reminderSchedules' array.
-  if (process.argv[3] === '--enable-long-reminder') {
-    reminderSchedules.forEach((schedule) => {
-      cron.schedule(
-        schedule,
-        async () => {
+  reminderSchedules.forEach((schedule) => {
+    cron.schedule(
+      schedule,
+      async () => {
+        if (personalAnzuConfigurations.enableLongReminders) {
           await reminder();
-        },
-        settings
-      );
-    });
-  } else {
-    reminderSchedules.forEach((schedule) => {
-      cron.schedule(
-        schedule,
-        async () => {
+        } else {
           await compactReminder();
-        },
-        settings
-      );
-    });
-  }
+        }
+      },
+      settings
+    );
+  });
 
   // For cleanups, we are going to iterate through the 'cleanUpSchedules' array.
   cleanUpSchedules.forEach((schedule) => {

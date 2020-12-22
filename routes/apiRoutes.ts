@@ -3,9 +3,10 @@ import * as adminFunctions from '../functions/adminFunctions';
 import AppError from '../utils/appError';
 import { BehaviorType, ScheduleType } from '../types';
 import * as behaviorFunctions from '../functions/behaviorFunctions';
-import operationalErrorHandler from '../functions/errorFunctions';
 import featureGuard from '../utils/featureGuard';
 import getSourceId from '../utils/getSourceId';
+import operationalErrorHandler from '../functions/errorFunctions';
+import personalAnzuConfigurations from '../constants';
 import * as taskFunctions from '../functions/taskFunctions';
 
 const apiCall = async (event: WebhookEvent): Promise<null | void> => {
@@ -73,7 +74,7 @@ const apiCall = async (event: WebhookEvent): Promise<null | void> => {
           text.startsWith('/leave') ||
           text.startsWith('/reschedule') ||
           text.startsWith('/finish')) &&
-        process.argv[2] !== '--disable-administrator'
+        personalAnzuConfigurations.disableAdministrator
       ) {
         featureGuard({
           userId,
