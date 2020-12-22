@@ -37,6 +37,8 @@ If you have no desire to deploy your own but want to test the functionalities of
 
 As an alternative, you could deploy her by yourselves. You can use Anzu by inviting her to a room or a group, or by simply chatting her and using the available commands, explained in the next section.
 
+In this repository, environment means either personal chat, group, or room. It is used to define the 'location' that the bot is currently receiving commands from.
+
 ## Command List
 
 Anzu is available for the following commands.
@@ -55,6 +57,17 @@ Several administrator commands are also available for testing the bot.
 - `System Call: Administrator` is used to check if the user saying that passphrase is an administrator or not.
 - `System Call: Delete Expired` is used to delete all expired tasks, manually.
 - `System Call: Local Deletion` is used to delete all tasks in an environment.
+
+There is also a configuration file located at `constants/constants.ts`. Each of the values will do as follows.
+
+- `botName` is the default name of the bot. This can be changed, but currently it does nothing.
+- `disableAdministrator` is set by default to `false`. If this configuration is set to `true`, then the bot will allow anyone in the environment to schedule, finish, delete, and reschedule tasks. This flag also allows anyone to 'kick' or make the bot leave. `System Call`s are still restricted to administrators.
+- `enableLongReminders` is set by default to `true`. This configuration will cause the bot to send a reminder of all tasks in the current environment, instead of telling everyone in the current environment to use `/tasks`.
+- `timezone` is to set the bot timezone.
+- `cleanUpSchedules` is an array that will take _n_ values of cron syntaxes. This variable will be used to determine how many times and when the clean up routine will occur.
+- `reminderSchedules` is an array that will take _n_ values of cron syntaxes. This variable will be used to determine how many times and when the reminder routine will occur.
+
+Values above are frozen by default and will not be able to be changed at runtime. You have to restart your bot and rewrite the variables for the changes to take effect.
 
 Anzu comes with several error-handling methods. It is impossible to create a task whose deadline is less than the current date. Deleting tasks that does not exist in the current environment that Anzu is in is also impossible. Refer below for usage examples.
 
@@ -76,10 +89,12 @@ The project is structured as follows:
 - `.circleci` for CircleCI pipeline integration.
 - `.github` for repository related files.
 - `auto` for the automatic ping script (CRON).
+- `constants` for Anzu configuration variables.
 - `functions` to store the essential functions.
 - `models` to store NoSQL data models.
 - `responses` to store Anzu's responses.
 - `routes` to process Anzu's commands.
+- `types` for custom types.
 - `utils` for utility functions.
 - `.eslintrc.json`, `.prettierrc` are for linting and prettifying the code.
 - `app.js`, `server.js` are for starting the application.
@@ -116,6 +131,15 @@ npm install
 
 - Fourth, setup your environment variables, according to the `app.json` file.
 
+```bash
+export ADMIN_USER_ID=YOUR_LINE_USERID
+export CHANNEL_ACCESS_TOKEN=YOUR_CHANNEL_ACESS_TOKEN
+export CHANNEL_SECRET=YOUR_CHANNEL_SECRET_TOKEN
+export DATABASE=YOUR_DATABASE_RESOLVED_CONNECTION_STRING
+```
+
+- The `ADMIN_USER_ID` is not your LINE ID, but is a randomly generated ID by the bot. This ID will be given after you added the bot as a friend. Check out your MongoDB Atlas!
+
 ## Deployment
 
 As per [LINE Guidelines](https://developers.line.biz/en/docs/messaging-api/building-bot/), it is impossible to run the application locally, as LINE Webhook requires HTTPS with a valid SSL/TLS certificate issued by a certified authority.
@@ -130,7 +154,7 @@ heroku config:set KEY=VALUE (refer to app.json for all environment variables)
 heroku open
 ```
 
-If you want to use the production version (everyone can schedule tasks, delete tasks, enable long reminders, etcetera), make sure to change the `web` process in the Heroku dyno settings to `npm run production`.
+If you want to use the production version (everyone can schedule tasks, delete tasks, enable long reminders, etcetera), make sure to change the `constants/constants.ts` file! You can enable long reminders (so Anzu displays the unfinished tasks instead of prompting you to use `/tasks`) or disable the administrator guard, which means that everyone in the environment can create, delete, or reschedule tasks.
 
 The default dyno process is `web`, and it will run `npm start`.
 
@@ -142,10 +166,12 @@ After deploying the application, put the URL of your deployed application into y
 
 ## Automated Cron Setup
 
-Cron is used to schedule timers of when Anzu would remind its users about tasks to be done. Like a true scheduler bot, cronjobs are run at the following times (GMT +7 time):
+Cron is used to schedule timers of when Anzu would remind its users about tasks to be done. Like a true scheduler bot, cronjobs are run by default at the following times (GMT +7 time):
 
 - 01:00 (to clean up expired tasks)
 - 17:00 (to remind a user / group / room about a task)
+
+You can change the timezone and the number of times you want to be reminded by editing the configuration file at `constants/constants.ts`.
 
 If you have a paid LINE subscription, you can add more reminders. However, as I am stuck with the free version, I'll keep them at two reminders per day.
 
@@ -209,5 +235,6 @@ This application is licensed under MIT License. Please see the `LICENSE` file fo
 I hereby offer thanks and credits to the following services and providers:
 
 - [LINE Developers](https://developers.line.biz/en/) for the API and LINE Services.
+- [LINE SDK](https://github.com/line/line-bot-sdk-nodejs) for the SDK.
 
 Feel free to cite everything from this repository, as long as you give your credit. Anzu is not related in any way, shape, or form to my work or my research. Anzu is just a personal interest turned open source.
