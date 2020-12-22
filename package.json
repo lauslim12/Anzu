@@ -8,7 +8,9 @@
     "clean": "rimraf ./dist",
     "format": "prettier --write --config ./.prettierrc ./**/*.{js,ts}",
     "format:check": "prettier --check --config ./.prettierrc ./**/*.{js,ts}",
-    "lint": "npx eslint . --ext .js --ext .ts",
+    "type:check": "tsc --noEmit",
+    "eslint:check": "npx eslint . --ext .ts",
+    "lint": "npm run eslint:check && npm run type:check",
     "start": "node ./dist/server.js",
     "production": "node ./dist/server.js --disable-administrator --enable-long-reminder",
     "build": "npm run clean && tsc"
