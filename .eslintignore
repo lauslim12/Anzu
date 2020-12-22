@@ -1,0 +1,9 @@
+# Files
+Procfile
+LICENSE
+
+# Extensions
+**/*.md
+**/*.txt
+**/*.json
+**/*.sh
