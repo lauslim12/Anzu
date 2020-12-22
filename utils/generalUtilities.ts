@@ -1,13 +1,15 @@
+import { TaskType } from '../types';
+
 // Check if an array is empty.
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export const isArrayEmpty = (list: any[]): boolean => {
+export const isArrayEmpty = (
+  list: Array<string | number | TaskType>
+): boolean => {
   if (!Array.isArray(list) || !list.length) {
     return true;
   }
 
   return false;
 };
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 // Check if an object is empty.
 export const isObjectEmpty = (obj: Object): boolean => {
