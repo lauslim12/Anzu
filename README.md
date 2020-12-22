@@ -97,7 +97,7 @@ In order to run Anzu in your own web server, following steps must be done.
 
 - Don't forget to disable all of the auto-response and greeting messages, as they have already been programmed in the application.
 
-- The next thing that you should do is that you must make yourself a MongoDB connection string to be used. I recommend you to use [MongoDB Atlas](https://www.mongodb.com/cloud/atlas), a Database as a Service. Get your connection string and we are going to use it in the `DATABASE`, `DATABASE_PASSWORD`, and `DATABASE_USERNAME` environment variable.
+- The next thing that you should do is that you must make yourself a MongoDB connection string to be used. I recommend you to use [MongoDB Atlas](https://www.mongodb.com/cloud/atlas), a Database as a Service. Get your connection string and we are going to use it in the `DATABASE` environment variable. Make sure that you resolve (fill the `<password>` and the `<dbname>`) the whole connection string.
 
 - We'll start by initializing our repository. First off, fork and clone the repository. I am going to assume that you would clone the repository into the `$HOME` directory.
 
@@ -123,13 +123,14 @@ As per [LINE Guidelines](https://developers.line.biz/en/docs/messaging-api/build
 As a way to deploy the application, we could use a PaaS (Platform as a Service) provider such as Heroku. You could follow the following procedures to setup Anzu quickly.
 
 ```bash
+git init
 heroku create
 git push heroku master
 heroku config:set KEY=VALUE (refer to app.json for all environment variables)
 heroku open
 ```
 
-If you want to use the production version (everyone can schedule tasks, delete tasks, enable long reminders, etcetera), make sure to use the `web/production` (from `Procfile`) process in the Heroku dyno settings.
+If you want to use the production version (everyone can schedule tasks, delete tasks, enable long reminders, etcetera), make sure to change the `web` process in the Heroku dyno settings to `npm run production`.
 
 The default dyno process is `web`, and it will run `npm start`.
 
