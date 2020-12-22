@@ -1,4 +1,17 @@
 import { Document } from 'mongoose';
+import { ScheduleOptions } from 'node-cron';
+
+/**
+ * Types for configuration file.
+ */
+export type AnzuConfigurationType = {
+  botName: string;
+  disableAdministrator: boolean;
+  enableLongReminders: boolean;
+  timezone: ScheduleOptions['timezone'];
+  cleanUpSchedules: ReadonlyArray<string>;
+  reminderSchedules: ReadonlyArray<string>;
+};
 
 /**
  * Types for main functions.
