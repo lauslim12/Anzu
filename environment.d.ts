@@ -5,8 +5,6 @@ declare global {
       CHANNEL_ACCESS_TOKEN: string;
       CHANNEL_SECRET: string;
       DATABASE: string;
-      DATABASE_PASSWORD: string;
-      DATABASE_USERNAME: string;
     }
   }
 }

@@ -16,10 +16,6 @@ process.on('uncaughtException', (err) => {
 
 // Server Setup and Global Variables.
 const PORT = process.env.PORT || 3000;
-const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
 
 // CRON Setup.
 initializeCron();
@@ -27,7 +23,7 @@ console.log('Cronjobs setup successfully!');
 
 // Database Connection.
 mongoose
-  .connect(DB, {
+  .connect(process.env.DATABASE, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
