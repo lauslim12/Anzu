@@ -1,5 +1,5 @@
 {
-  "name": "Anzu Line Bot",
+  "name": "Anzu LINE Scheduler Bot",
   "description": "A LINE chatbot to schedule and remind you of your tasks",
   "repository": "https://github.com/lauslim12/Anzu",
   "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/main/public/node.svg",
@@ -26,13 +26,7 @@
       "desciption": "Your LINE Developers Account Secret Key to authorize yourself"
     },
     "DATABASE": {
-      "description": "Your MongoDB connection string. Make sure to NOT expose the password in this connection string (but fill your username and the database name) (format: mongodbserver://<YOUR_USERNAME>:<PASSWORD>mongodbstring/<YOUR_DATABASE>?mongodbstring)"
-    },
-    "DATABASE_PASSWORD": {
-      "description": "Your MongoDB connection string password"
-    },
-    "DATABASE_USERNAME": {
-      "description": "Your MongoDB connection string username"
+      "description": "Your MongoDB connection string, in the format of: mongodbserver://USERNAME:PASSWORDmongodbstring/DATABASENAME?mongodbstring."
     }
   }
 }

@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import { TaskType } from '../types';
 
 const taskSchema = new mongoose.Schema({
   sourceId: {
@@ -28,6 +29,6 @@ const taskSchema = new mongoose.Schema({
   },
 });
 
-const Task = mongoose.model('Task', taskSchema);
+const Task = mongoose.model<TaskType>('Task', taskSchema);
 
-module.exports = Task;
+export default Task;

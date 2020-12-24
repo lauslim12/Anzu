@@ -1,5 +1,9 @@
+import { TaskType } from '../types';
+
 // Check if an array is empty.
-exports.isArrayEmpty = (list) => {
+export const isArrayEmpty = (
+  list: Array<string | number | TaskType>
+): boolean => {
   if (!Array.isArray(list) || !list.length) {
     return true;
   }
@@ -8,7 +12,7 @@ exports.isArrayEmpty = (list) => {
 };
 
 // Check if an object is empty.
-exports.isObjectEmpty = (obj) => {
+export const isObjectEmpty = (obj: Object): boolean => {
   if (!obj) {
     return true;
   }
@@ -21,7 +25,7 @@ exports.isObjectEmpty = (obj) => {
 };
 
 // Check if a date is in a valid 'YYYY-MM-DD' format.
-exports.isDateValid = (dateString) => {
+export const isDateValid = (dateString: string): boolean => {
   const regularExpression = /^\d{4}-\d{2}-\d{2}$/;
 
   // If does not match regular expression, then fail.
@@ -46,8 +50,12 @@ exports.isDateValid = (dateString) => {
 };
 
 // Check if date is lower than the current date.
-exports.isDateLessThanToday = (dateString) => {
+export const isDateLessThanToday = (dateString: string): boolean => {
   const currentDate = new Date(Date.now()).toISOString().split('T')[0];
+
+  if (currentDate === undefined) {
+    return false;
+  }
 
   if (dateString < currentDate) {
     return true;
@@ -57,8 +65,12 @@ exports.isDateLessThanToday = (dateString) => {
 };
 
 // Check if a string is empty or only contains whitespace.
-exports.isStringEmpty = (str) => {
+export const isStringEmpty = (str: string | undefined): boolean => {
   if (!str || str.length === 0 || /^\s*$/.test(str)) {
+    return true;
+  }
+
+  if (str === undefined) {
     return true;
   }
 

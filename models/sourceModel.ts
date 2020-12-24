@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import { SourceType } from '../types';
 
 const sourceSchema = new mongoose.Schema({
   sourceId: {
@@ -20,6 +21,6 @@ const sourceSchema = new mongoose.Schema({
 // Setup index to prevent double sourceIds.
 sourceSchema.path('sourceId').index({ unique: true });
 
-const Source = mongoose.model('Source', sourceSchema);
+const Source = mongoose.model<SourceType>('Source', sourceSchema);
 
-module.exports = Source;
+export default Source;

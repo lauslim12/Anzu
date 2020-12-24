@@ -1,11 +1,17 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+
+// Types.
+type ResponseInText = {
+  name: string;
+  text: string;
+};
 
 // Responses.
-const responses = [];
+const responses: ResponseInText[] = [];
 
 // Top level code, run this in the beginning of the application.
-exports.getAllResponsesInApplication = () => {
+export const getAllResponsesInApplication = (): void => {
   try {
     // 1. Get all files in the 'responses' folder.
     const pathToResponses = path.join('responses');
@@ -36,10 +42,13 @@ exports.getAllResponsesInApplication = () => {
 };
 
 // Call this when running the function.
-exports.transformResponse = (responseName, [...messageToReplace]) => {
+export const transformResponse = (
+  responseName: string,
+  [...messageToReplace]
+): string => {
   // When calling files, replace and destructure.
-  const textToBeProcessed = responses.find((file) => file.name === responseName)
-    .text;
+  const textToBeProcessed =
+    responses.find((file) => file.name === responseName)?.text || '';
 
   // No string to be replaced, send to client in real app...
   if (!textToBeProcessed.includes('MESSAGE')) {

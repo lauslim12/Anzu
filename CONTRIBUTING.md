@@ -10,7 +10,7 @@ Please follow this for the sake of the code to be as readable and maintainable a
 - Before you submit your pull request, ensure that you run the following procedures.
 
 ```bash
-npm run prettier
+npm run format
 npm run lint
 ```
 
@@ -24,18 +24,18 @@ Please use [Semantic Commit Messages](https://seesparkbox.com/foundry/semantic_c
 
 If you want to add a feature that makes Anzu reply to the users, please insert the output message (in the file format of `functionName.txt`) in the `responses/functionsFileName` folder (`taskFunctions` will be named as `tasks`, plural). **Make sure that the function name is the same as the file output name.**
 
-If you need to insert dynamic messages, use the provided `transformResponse` function in `utils/responseHelper.js` and prepare a template in the file like I did with `<%MESSAGE(NUMBER_STARTS_FROM_ZERO)%>`. Note that you should insert an empty array if you do not need to insert dynamic messages.
+If you need to insert dynamic messages, use the provided `transformResponse` function in `utils/responseHelper.ts` and prepare a template in the file like I did with `<%MESSAGE(NUMBER_STARTS_FROM_ZERO)%>`. Note that you should insert an empty array if you do not need to insert dynamic messages.
 
 ```javascript
 // Static message example.
 const message = transformResponse('functionName', []);
 const response = createResponse(message);
-await client.replyMessage(event.replyToken, response);
+await client.replyMessage(replyToken, response);
 
 // Dynamic message example.
 const message = transformResponse('functionName', ['string1', variableOne]);
 const response = createResponse(message);
-await client.replyMessage(event.replyToken, response);
+await client.replyMessage(replyToken, response);
 ```
 
 Note that the items in the array are processed (replaced) **sequentially**.
@@ -46,5 +46,6 @@ In order to contribute to this project, please create an issue about the problem
 
 - Fork the repository.
 - Create a new branch based on the issue number that you created beforehand. Example: `git checkout -b 10`.
+- Make sure to update the `CHANGELOG.md` and the version number in `package.json`.
 - Commit and push your features / changes.
 - Create a new pull request.
