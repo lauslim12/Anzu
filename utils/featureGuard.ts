@@ -1,10 +1,6 @@
 import AppError from './appError';
+import { FeatureGuardType } from '../types';
 import { isStringEmpty } from './generalUtilities';
-
-type FeatureGuardType = {
-  userId?: string;
-  replyToken: string;
-};
 
 const featureGuard = ({ userId, replyToken }: FeatureGuardType): void => {
   if (isStringEmpty(userId)) {

@@ -1,14 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-
-// Types.
-type ResponseInText = {
-  name: string;
-  text: string;
-};
+import { ResponseInTextType } from '../types';
 
 // Responses.
-const responses: ResponseInText[] = [];
+const responses: ResponseInTextType[] = [];
 
 // Top level code, run this in the beginning of the application.
 export const getAllResponsesInApplication = (): void => {

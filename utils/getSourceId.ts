@@ -1,9 +1,5 @@
 import { EventSource } from '@line/bot-sdk';
-
-type SourceIdAndType = {
-  sourceId: string;
-  sourceType: string;
-};
+import { SourceIdAndType } from '../types';
 
 const getSourceId = (event: EventSource): SourceIdAndType => {
   let sourceId;

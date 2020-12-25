@@ -1,13 +1,9 @@
 import { isObjectEmpty } from './generalUtilities';
-
-type ElementType = {
-  deadline: Date;
-  name: String;
-};
+import { ParseNotificationElementType } from '../types';
 
 // Types: 'reminder' and 'cleaning up'.
 const parseNotification = (
-  element: ElementType,
+  element: ParseNotificationElementType,
   index: number,
   type: string
 ): string | undefined => {

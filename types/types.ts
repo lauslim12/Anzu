@@ -2,7 +2,7 @@ import { Document } from 'mongoose';
 import { ScheduleOptions } from 'node-cron';
 
 /**
- * Types for configuration file.
+ * Type for the configuration file.
  */
 export type AnzuConfigurationType = {
   botName: string;
@@ -40,9 +40,19 @@ export type FeatureGuardType = {
   replyToken: string;
 };
 
+export type ParseNotificationElementType = {
+  deadline: Date;
+  name: string;
+};
+
 export type ResponseInTextType = {
   name: string;
   text: string;
+};
+
+export type SourceIdAndType = {
+  sourceId: string;
+  sourceType: string;
 };
 
 /**
