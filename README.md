@@ -191,8 +191,8 @@ crontab -e
 - The reason the crontab is setup like this is so that it gives Heroku time to prepare before running the cronjobs made with `node-cron`. We just need to ping the webserver (a small `GET` request) so that it wakes up.
 
 ```bash
-55 00 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
-55 16 * * * cd "$HOME/Anzu/auto" && bash main.sh <link_to_webserver>
+55 00 * * * cd "$HOME/Anzu/auto" && bash ping-webserver.sh <link_to_webserver>
+55 16 * * * cd "$HOME/Anzu/auto" && bash ping-webserver.sh <link_to_webserver>
 ```
 
 - In order to check if our crontab had run successfully, we could use the following command.
@@ -201,7 +201,7 @@ crontab -e
 sudo grep CRON /var/log/syslog
 ```
 
-- As an additional note, you might want to setup SSH into your Git, as I have programmed it to always pull from the latest repository everytime the `main.sh` shell script is launched. Don't forget to set the `origin` URL.
+- As an additional note, you might want to setup SSH into your Git, as I also have a script named `keep-track.sh` to always pull from the latest remote repository to keep my local repository updated. Don't forget to set the `origin` URL.
 
 ```bash
 cd $HOME
@@ -213,6 +213,12 @@ cat id_rsa.pub    # The default identifier is 'id_rsa'. You probably have a diff
 # Then, configure your access keys with your GitHub configuration. After that, test your connection.
 ssh -T git@github.com
 git remote set-url origin git+ssh://git@github.com/username/reponame.git
+```
+
+- You can run `keep-track.sh` by using the following cronjobs. In this example, I run this script everyday at 09:00 AM.
+
+```bash
+00 09 * * * cd "$HOME/Anzu/auto" && bash keep-track.sh
 ```
 
 ## Contribution

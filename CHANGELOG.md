@@ -2,6 +2,11 @@
 
 Changelog is used to keep track of version changes. The versioning scheme used is [SemVer](https://semver.org/). First integer is used for breaking change, second integer is used for major patches, and third integer is used for minor bug fixes.
 
+## Version 2.0.2 (25/12/2020)
+
+- Changed `main.sh` to `keep-track.sh` and `ping-webserver.sh` for clarity.
+- Updated documentation regarding the usage of cronjobs.
+
 ## Version 2.0.1 (25/12/2020)
 
 - Refactored several types to its own file.
