@@ -6,6 +6,7 @@
   "main": "dist/server.js",
   "scripts": {
     "clean": "rimraf ./dist",
+    "clean:docs": "rimraf ./docs/.vuepress/dist",
     "format": "prettier --write --config ./.prettierrc ./**/*.{js,ts}",
     "format:check": "prettier --check --config ./.prettierrc ./**/*.{js,ts}",
     "type:check": "tsc --noEmit",
@@ -13,6 +14,7 @@
     "lint": "npm run eslint:check && npm run type:check",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
+    "docs:deploy": "npm run clean:docs && npm run docs:build && gh-pages -d ./docs/.vuepress/dist -m \"[skip ci] chore: Deployed documentation to GitHub Pages\"",
     "start": "node ./dist/server.js",
     "build": "npm run clean && tsc"
   },
@@ -54,6 +56,7 @@
     "eslint-plugin-prettier": "^3.3.0",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "gh-pages": "^3.1.0",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.1.3",
