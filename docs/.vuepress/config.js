@@ -21,6 +21,10 @@ module.exports = {
         link: '/automation',
       },
       {
+        text: 'Contribution',
+        link: '/contribution',
+      },
+      {
         text: 'GitHub',
         link: 'https://github.com/lauslim12/Anzu',
       },
@@ -35,6 +39,7 @@ module.exports = {
         title: 'Getting Started',
         collapsable: false,
         children: [
+          '/getting-started/requirements',
           '/getting-started/installation',
           '/getting-started/configurations',
         ],
@@ -57,7 +62,7 @@ module.exports = {
       {
         title: 'Contribution',
         collapsable: false,
-        children: ['/contribution/contributing', '/contribution/license'],
+        children: ['/contribution/CONTRIBUTING', '/contribution/CHANGELOG'],
       },
     ],
   },
