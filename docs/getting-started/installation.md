@@ -1,0 +1,3 @@
+# Installation
+
+Sample page here.
