@@ -1,5 +1,6 @@
 module.exports = {
   base: '/Anzu/',
+  head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
   title: 'Anzu',
   description: 'Anzu LINE Bot Documentation',
   themeConfig: {
