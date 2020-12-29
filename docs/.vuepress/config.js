@@ -57,7 +57,7 @@ module.exports = {
       {
         title: 'Automation',
         collapsable: false,
-        children: ['/automation/setup-cron', '/automation/setup-schedulers'],
+        children: ['/automation/setup-automation'],
       },
       {
         title: 'Contribution',

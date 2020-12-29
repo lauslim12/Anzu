@@ -1,3 +1,0 @@
-# Setup Cron
-
-Sample page.
