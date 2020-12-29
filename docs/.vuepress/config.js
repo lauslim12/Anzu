@@ -62,7 +62,12 @@ module.exports = {
       {
         title: 'Contribution',
         collapsable: false,
-        children: ['/contribution/CONTRIBUTING', '/contribution/CHANGELOG'],
+        children: [
+          '/contribution/CONTRIBUTING',
+          '/contribution/CHANGELOG',
+          '/contribution/LICENSE',
+          '/contribution/credits',
+        ],
       },
     ],
   },
