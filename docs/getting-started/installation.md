@@ -79,4 +79,6 @@ As an alternative to deployment, simply click the following button.
 
 After deploying the application, put the URL of your deployed application into your LINE Official Account webhook and enable Webhooks. Doing that solves the deployment.
 
+Next step, don't forget to change the [configuration file](configurations.md) to your personal preferences! Don't forget to push Anzu again to the latest repository on your webserver or Heroku, or else the changes will not be reflected.
+
 Feel free to add the LINE account to use your own personal LINE scheduler! Don't forget to chat or invite her to a group / room!
