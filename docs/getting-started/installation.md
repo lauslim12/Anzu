@@ -42,6 +42,12 @@ Now, the next step diverges, if you want to install the application in your own 
 npm install
 ```
 
+- Build the application first.
+
+```bash
+npm run build
+```
+
 - Setup your environment variables, according to the `app.json` file.
 
 ```bash
@@ -66,6 +72,8 @@ git push heroku master
 heroku config:set KEY=VALUE (refer to app.json for all environment variables)
 heroku open
 ```
+
+You do not need to build the application first. Heroku does that automatically for you.
 
 If you want to use the production version (everyone can schedule tasks, delete tasks, enable long reminders, etcetera), make sure to change the `constants/constants.ts` file! You can enable long reminders (so Anzu displays the unfinished tasks instead of prompting you to use `/tasks`) or disable the administrator guard, which means that everyone in the environment can create, delete, or reschedule tasks.
 
