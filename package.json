@@ -1,6 +1,6 @@
 {
   "name": "anzu",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "A LINE chatbot to schedule and remind you of your tasks",
   "private": true,
   "main": "dist/server.js",
@@ -27,7 +27,7 @@
   "bugs": {
     "url": "https://github.com/lauslim12/Anzu/issues"
   },
-  "homepage": "https://github.com/lauslim12/Anzu#readme",
+  "homepage": "https://lauslim12.github.io/Anzu/",
   "dependencies": {
     "@line/bot-sdk": "^7.2.0",
     "compression": "^1.7.4",
