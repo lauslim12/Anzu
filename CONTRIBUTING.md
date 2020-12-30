@@ -63,6 +63,7 @@ In order to contribute to this project, please create an issue about the problem
 
 - Fork the repository.
 - Create a new branch based on the issue number that you created beforehand. Example: `git checkout -b 10`.
-- Make sure to update the `CHANGELOG.md` and the version number in `package.json`.
+- Make sure to update the `CHANGELOG.md`, the version number in `package.json`, and version number in the badge in the `README.md` file.
+- Make sure to update the documentation (if possible) if you add or edit any responses and/or functions.
 - Commit and push your features / changes.
 - Create a new pull request.
