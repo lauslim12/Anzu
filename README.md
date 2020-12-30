@@ -18,7 +18,7 @@ Anzu (she/her) is an open source LINE chatbot to remind you of your tasks. Anzu 
   <img src="https://circleci.com/gh/lauslim12/Anzu.svg?style=shield" />
 </p>
 
-![screenshot](/.github/screenshot.png)
+![screenshot](./.github/screenshot.png)
 
 Check out more of Anzu by looking at [her website!](https://lauslim12.github.io/Anzu/)
 
