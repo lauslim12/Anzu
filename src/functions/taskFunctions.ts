@@ -55,7 +55,9 @@ export const scheduleTask = async (data: ScheduleType): Promise<void> => {
   });
 
   // 4. Send back response to the user.
-  const readableDateString = new Date(chosenDate).toISOString().split('T')[0];
+  const readableDateString =
+    new Date(chosenDate).toISOString().split('T')[0] || 'Unknown date';
+
   const message = transformResponse('scheduleTask', [task, readableDateString]);
   const response = createResponse(message);
 
@@ -173,7 +175,9 @@ export const rescheduleTask = async (data: ScheduleType): Promise<void> => {
   );
 
   // 4. Send response.
-  const readableDateString = new Date(taskDate).toISOString().split('T')[0];
+  const readableDateString =
+    new Date(taskDate).toISOString().split('T')[0] || 'Unknown date';
+
   const message = transformResponse('rescheduleTask', [
     taskName,
     readableDateString,

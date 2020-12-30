@@ -39,7 +39,7 @@ export const getAllResponsesInApplication = (): void => {
 // Call this when running the function.
 export const transformResponse = (
   responseName: string,
-  [...messageToReplace]
+  [...messageToReplace]: [...string[]]
 ): string => {
   // When calling files, replace and destructure.
   const textToBeProcessed =
