@@ -2,6 +2,12 @@
 
 Changelog is used to keep track of version changes. The versioning scheme used is [SemVer](https://semver.org/). First integer is used for breaking change, second integer is used for major patches, and third integer is used for minor bug fixes.
 
+## Version 2.1.0 (30/12/2020)
+
+- Finished documentation with Vue.js / Vuepress.
+- Refactored most of the Git documents.
+- Usage of symlinks for shared content between Git repository and the documentation.
+
 ## Version 2.0.2 (25/12/2020)
 
 - Changed `main.sh` to `keep-track.sh` and `ping-webserver.sh` for clarity.
@@ -29,3 +35,4 @@ Changelog is used to keep track of version changes. The versioning scheme used i
 - Features available are creating tasks, deleting tasks, finishing tasks, scheduling tasks, making her leave, administrator system calls, and reminders/cleanups with cron.
 - Added load balancing with responses.
 - Setup CI with CircleCI and Heroku.
+- [This particular version (not maintained) could be seen here in the `v1.0.0` branch.](https://github.com/lauslim12/Anzu/tree/v1.0.0)
