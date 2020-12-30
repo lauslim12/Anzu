@@ -30,7 +30,7 @@ Check out more of Anzu by looking at [her website!](https://lauslim12.github.io/
 - Shell Scripts and Micro Computers for Automation
 - Vue.js for Documentation
 
-Anzu is divided into two subprojects: `bot` for the bot itself, and `docs` for the documentation. The `bot` is made with [TypeScript](https://www.typescriptlang.org/) and [Node.js](https://nodejs.org/en/) from scratch, while the `docs` is bootstrapped using [Vue.js / Vuepress](https://vuepress.vuejs.org/) and hosted with [GitHub Pages](https://pages.github.com/).
+Anzu is divided into two subprojects: `bot` or `src` for the bot itself, and `docs` for the documentation. The `bot` or `src` is made with [TypeScript](https://www.typescriptlang.org/) and [Node.js](https://nodejs.org/en/) from scratch, while the `docs` is bootstrapped using [Vue.js / Vuepress](https://vuepress.vuejs.org/) and hosted with [GitHub Pages](https://pages.github.com/).
 
 ## Documentation
 
