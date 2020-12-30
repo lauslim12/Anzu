@@ -1,6 +1,23 @@
 # Contributing
 
-In order to contribute to this project, please follow these style guide and workflow.
+Anzu is completely open source and contribution to this tool is highly encouraged for everyone! If you have found any issues during your usage of this program, please submit an issue and I'll go back to you right away.
+
+In order to contribute to this project as a programmer, please follow these style guide and workflow.
+
+## Project Structure
+
+The project is structured as follows (top-level only):
+
+- `.circleci` for CircleCI pipeline integration.
+- `.github` for repository related files.
+- `auto` for the automatic ping script (CRON).
+- `constants` for Anzu configuration variables.
+- `functions` to store the essential functions.
+- `models` to store NoSQL data models.
+- `responses` to store Anzu's responses.
+- `routes` to process Anzu's commands.
+- `types` for custom types.
+- `utils` for utility functions.
 
 ## Coding Style Guide
 
@@ -46,6 +63,7 @@ In order to contribute to this project, please create an issue about the problem
 
 - Fork the repository.
 - Create a new branch based on the issue number that you created beforehand. Example: `git checkout -b 10`.
-- Make sure to update the `CHANGELOG.md` and the version number in `package.json`.
+- Make sure to update the `CHANGELOG.md`, the version number in `package.json`, and version number in the badge in the `README.md` file.
+- Make sure to update the documentation (if possible) if you add or edit any responses and/or functions.
 - Commit and push your features / changes.
 - Create a new pull request.
