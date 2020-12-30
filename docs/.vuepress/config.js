@@ -4,6 +4,8 @@ module.exports = {
   title: 'Anzu',
   description: 'Anzu LINE Bot Documentation',
   themeConfig: {
+    smoothScroll: true,
+    repo: 'lauslim12/Anzu',
     nav: [
       {
         text: 'Introduction',
@@ -25,10 +27,6 @@ module.exports = {
         text: 'Contribution',
         link: '/contribution',
       },
-      {
-        text: 'GitHub',
-        link: 'https://github.com/lauslim12/Anzu',
-      },
     ],
     sidebar: [
       {
@@ -40,6 +38,7 @@ module.exports = {
         title: 'Getting Started',
         collapsable: false,
         children: [
+          '/getting-started',
           '/getting-started/requirements',
           '/getting-started/installation',
           '/getting-started/configurations',
@@ -49,6 +48,7 @@ module.exports = {
         title: 'Commands',
         collapsable: false,
         children: [
+          '/commands',
           '/commands/admin-commands',
           '/commands/behavior-commands',
           '/commands/error-commands',
@@ -58,12 +58,13 @@ module.exports = {
       {
         title: 'Automation',
         collapsable: false,
-        children: ['/automation/setup-automation'],
+        children: ['/automation', '/automation/setup-automation'],
       },
       {
         title: 'Contribution',
         collapsable: false,
         children: [
+          '/contribution',
           '/contribution/CONTRIBUTING',
           '/contribution/CHANGELOG',
           '/contribution/LICENSE',
