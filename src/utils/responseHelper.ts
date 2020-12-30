@@ -9,7 +9,7 @@ const responses: ResponseInTextType[] = [];
 export const getAllResponsesInApplication = (): void => {
   try {
     // 1. Get all files in the 'responses' folder.
-    const pathToResponses = path.join('responses');
+    const pathToResponses = path.join('src', 'responses');
     const directories = fs.readdirSync(pathToResponses);
 
     // 2. Read all files, synchronously, and strip the extension.
