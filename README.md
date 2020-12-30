@@ -4,7 +4,7 @@ Anzu (she/her) is an open source LINE chatbot to remind you of your tasks. Anzu 
 
 <p align="center">
   <img src="https://img.shields.io/badge/license-MIT-yellow.svg" />
-  <img src="https://img.shields.io/badge/version-2.1.0-important"/>
+  <img src="https://img.shields.io/badge/version-2.1.1-important"/>
 </p>
 
 <p align="center">
