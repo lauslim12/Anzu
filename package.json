@@ -1,6 +1,6 @@
 {
   "name": "anzu",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "A LINE chatbot to schedule and remind you of your tasks",
   "private": true,
   "main": "dist/server.js",
