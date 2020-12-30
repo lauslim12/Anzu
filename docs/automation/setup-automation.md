@@ -9,7 +9,7 @@ You can change the timezone and the number of times you want to be reminded by e
 
 If you have a paid LINE subscription, you can add more reminders. However, as I am stuck with the free version, I'll keep them at two reminders per day.
 
-A note to keep in mind that if there are no expired tasks, Anzu will not notify anything at 01:00. This is done so that the bandwith is not wasted. Another thing to note is that by default, this application uses the long reminder function for the schedulers (refer to `functions/scheduleFunctions`).
+A note to keep in mind that if there are no expired tasks, Anzu will not notify anything at 01:00. This is done so that the bandwith is not wasted. Another thing to note is that by default, this application uses the long reminder function for the schedulers (refer to `functions/scheduleFunctions.ts`).
 
 ## Automation Considerations
 
@@ -57,4 +57,30 @@ git remote set-url origin git+ssh://git@github.com/username/reponame.git
 
 ```bash
 00 09 * * * cd "$HOME/Anzu/auto" && bash keep-track.sh
+```
+
+## Example Of Reminders
+
+Below is the example of Anzu reminding someone.
+
+```text
+Hello everyone! How are you?
+
+This is an automated message from Anzu to remind you all of your schedules. Here is it:
+
+... (your tasks)
+
+Good luck and stay in high spirits!
+```
+
+Belos is the example of Anzu cleaning up tasks.
+
+```text
+Hello everyone! Did you sleep well?
+
+Anzu just wants to let you know that she has cleaned up several expired tasks. Here is it:
+
+... (your expired tasks)
+
+Thank you and good luck!
 ```
