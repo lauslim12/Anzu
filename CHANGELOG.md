@@ -5,6 +5,10 @@ Changelog is used to keep track of version changes. The versioning scheme used i
 ## Version 2.1.1 (30/12/2020)
 
 - Moved essential application files to the `src` folder for better modularity.
+- Fixed an `any` type in the `transformResponse` function.
+- Update project website in the `package.json` and `app.json` file.
+- Minor fix (missing default values) in the configuration documentation.
+- Fixed path error in the `getAllResponsesInApplication` function.
 
 ## Version 2.1.0 (30/12/2020)
 
