@@ -4,7 +4,7 @@
   "repository": "https://github.com/lauslim12/Anzu",
   "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/main/public/node.svg",
   "success_url": "/",
-  "website": "https://github.com/lauslim12/Anzu",
+  "website": "https://lauslim12.github.io/Anzu/",
   "keywords": [
     "node",
     "express",
@@ -20,13 +20,13 @@
       "description": "Your LINE user ID (not LINE ID) to act as an administrator"
     },
     "CHANNEL_ACCESS_TOKEN": {
-      "description": "Your LINE Developers Account API Key to act as the conduit"
+      "description": "Your LINE Developers's access token to access your channel"
     },
     "CHANNEL_SECRET": {
-      "desciption": "Your LINE Developers Account Secret Key to authorize yourself"
+      "desciption": "Your LINE Developers's secret to authorize your application"
     },
     "DATABASE": {
-      "description": "Your MongoDB connection string, in the format of: mongodbserver://USERNAME:PASSWORDmongodbstring/DATABASENAME?mongodbstring."
+      "description": "Your resolved MongoDB connection string. See the format in the documentation"
     }
   }
 }
