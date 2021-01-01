@@ -29,7 +29,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/index.html",
+  "start_url": "https://lauslim12.github.io/Anzu",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3eaf7c"
