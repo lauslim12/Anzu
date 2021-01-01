@@ -9,7 +9,7 @@ You can change the timezone and the number of times you want to be reminded by e
 
 If you have a paid LINE subscription, you can add more reminders. However, as I am stuck with the free version, I'll keep them at two reminders per day.
 
-A note to keep in mind that if there are no expired tasks, Anzu will not notify anything at 01:00. This is done so that the bandwith is not wasted. Another thing to note is that by default, this application uses the long reminder function for the schedulers (refer to `functions/scheduleFunctions.ts`).
+A note to keep in mind that if there are no expired tasks (or no tasks are available), Anzu will not notify anything at 01:00 or 17:00. This is done so that the bandwith is not wasted. Another thing to note is that by default, this application uses the long reminder function for the schedulers (refer to `functions/scheduleFunctions.ts`).
 
 ## Automation Considerations
 

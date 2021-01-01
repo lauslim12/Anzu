@@ -2,6 +2,11 @@
 
 Changelog is used to keep track of version changes. The versioning scheme used is [SemVer](https://semver.org/). First integer is used for breaking change, second integer is used for major patches, and third integer is used for minor bug fixes.
 
+## Version 2.2.0 (01/01/2021)
+
+- Upgraded documentation to support Progressive Web Applications (PWA).
+- Added more details on several guides.
+
 ## Version 2.1.1 (30/12/2020)
 
 - Moved essential application files to the `src` folder for better modularity.

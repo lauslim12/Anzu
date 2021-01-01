@@ -9,7 +9,11 @@ You are going to need some of these variables as environment variables.
 - `ADMIN_USER_ID`, gained after adding the bot as a friend after activating the application. For the first time, just set this one to a random value.
 - `CHANNEL_ACCESS_TOKEN`, which is your LINE Developers Account API Key to activate the channel webhook.
 - `CHANNEL_SECRET`, which is your LINE Developers Account Secret Key to authorize your application.
-- `DATABASE`, which is your MongoDB connection string, in the format of `mongodbserver://USERNAME:PASSWORDrandommongodbstring/DATABASENAME?randommongodbstring`.
+- `DATABASE`, which is your MongoDB connection string, in the format of:
+
+```text
+mongodbserver://USERNAME:PASSWORDrandommongodbstring/DATABASENAME?randommongodbstring
+```
 
 ## Account Setup
 
@@ -21,7 +25,11 @@ You are going to need some of these variables as environment variables.
 
 - The next thing that you should do is that you must make yourself a MongoDB connection string to be used. I recommend you to use [MongoDB Atlas](https://www.mongodb.com/cloud/atlas), a Database as a Service. Get your connection string and we are going to use it in the `DATABASE` environment variable. Make sure that you resolve the whole connection string (fill the `<password>` and the `<dbname>`).
 
-- An example of the 'resolved' connection string would be like this: `mongodbserver://USERNAME:PASSWORDrandommongodbstring/DATABASENAME?randommongodbstring`.
+- An example of the 'resolved' connection string would be like the following string.
+
+```text
+mongodbserver://USERNAME:PASSWORDrandommongodbstring/DATABASENAME?randommongodbstring
+```
 
 ## Repository Setup
 
