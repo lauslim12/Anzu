@@ -6,10 +6,15 @@
     <title>Error Handling | Anzu</title>
     <meta name="generator" content="VuePress 1.7.1">
     <link rel="icon" href="/Anzu/favicon.ico">
-    <meta name="description" content="Anzu LINE Bot Documentation">
+    <link rel="manifest" href="/Anzu/manifest.json">
+    <link rel="apple-touch-icon" href="/Anzu/icons/robot-face-icon-512.png">
+    <meta name="description" content="Anzu, the Open-Source LINE Bot Documentation">
+    <meta name="theme-color" content="#3eaf7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     
-    <link rel="preload" href="/Anzu/assets/css/0.styles.4d00fc56.css" as="style"><link rel="preload" href="/Anzu/assets/js/app.9a826d48.js" as="script"><link rel="preload" href="/Anzu/assets/js/2.5fd72e84.js" as="script"><link rel="preload" href="/Anzu/assets/js/15.94bb97ce.js" as="script"><link rel="prefetch" href="/Anzu/assets/js/10.445b9b5a.js"><link rel="prefetch" href="/Anzu/assets/js/11.0ae6507e.js"><link rel="prefetch" href="/Anzu/assets/js/12.a0e3cfed.js"><link rel="prefetch" href="/Anzu/assets/js/13.ff5bb991.js"><link rel="prefetch" href="/Anzu/assets/js/14.4f511160.js"><link rel="prefetch" href="/Anzu/assets/js/16.99d13b93.js"><link rel="prefetch" href="/Anzu/assets/js/17.d8127a27.js"><link rel="prefetch" href="/Anzu/assets/js/18.dde73508.js"><link rel="prefetch" href="/Anzu/assets/js/19.d8d254b5.js"><link rel="prefetch" href="/Anzu/assets/js/20.55095913.js"><link rel="prefetch" href="/Anzu/assets/js/21.051ad442.js"><link rel="prefetch" href="/Anzu/assets/js/22.11f51b28.js"><link rel="prefetch" href="/Anzu/assets/js/23.5afae314.js"><link rel="prefetch" href="/Anzu/assets/js/3.8316f46d.js"><link rel="prefetch" href="/Anzu/assets/js/4.82acd4a0.js"><link rel="prefetch" href="/Anzu/assets/js/5.598e4e43.js"><link rel="prefetch" href="/Anzu/assets/js/6.781b874c.js"><link rel="prefetch" href="/Anzu/assets/js/7.0deda649.js"><link rel="prefetch" href="/Anzu/assets/js/8.8582777c.js"><link rel="prefetch" href="/Anzu/assets/js/9.6649ebf8.js">
-    <link rel="stylesheet" href="/Anzu/assets/css/0.styles.4d00fc56.css">
+    <link rel="preload" href="/Anzu/assets/css/0.styles.1ade6980.css" as="style"><link rel="preload" href="/Anzu/assets/js/app.e4484d65.js" as="script"><link rel="preload" href="/Anzu/assets/js/2.00c218b4.js" as="script"><link rel="preload" href="/Anzu/assets/js/16.61fd67dc.js" as="script"><link rel="preload" href="/Anzu/assets/js/3.7ffcbd81.js" as="script"><link rel="prefetch" href="/Anzu/assets/js/10.d0bfff2e.js"><link rel="prefetch" href="/Anzu/assets/js/11.e4b8fa9c.js"><link rel="prefetch" href="/Anzu/assets/js/12.76d543de.js"><link rel="prefetch" href="/Anzu/assets/js/13.0c260d1d.js"><link rel="prefetch" href="/Anzu/assets/js/14.39e2d4f4.js"><link rel="prefetch" href="/Anzu/assets/js/15.e440aea8.js"><link rel="prefetch" href="/Anzu/assets/js/17.8b11c1b3.js"><link rel="prefetch" href="/Anzu/assets/js/18.d9c14378.js"><link rel="prefetch" href="/Anzu/assets/js/19.8580e4bd.js"><link rel="prefetch" href="/Anzu/assets/js/20.24fd9c79.js"><link rel="prefetch" href="/Anzu/assets/js/21.b701f6a2.js"><link rel="prefetch" href="/Anzu/assets/js/22.fe4fc397.js"><link rel="prefetch" href="/Anzu/assets/js/23.54c76dcf.js"><link rel="prefetch" href="/Anzu/assets/js/24.139ad038.js"><link rel="prefetch" href="/Anzu/assets/js/25.9cedbf6e.js"><link rel="prefetch" href="/Anzu/assets/js/4.29522062.js"><link rel="prefetch" href="/Anzu/assets/js/5.67518aeb.js"><link rel="prefetch" href="/Anzu/assets/js/6.725f8c42.js"><link rel="prefetch" href="/Anzu/assets/js/7.0e63420f.js"><link rel="prefetch" href="/Anzu/assets/js/8.0618f2cb.js"><link rel="prefetch" href="/Anzu/assets/js/9.ac3bf558.js">
+    <link rel="stylesheet" href="/Anzu/assets/css/0.styles.1ade6980.css">
   </head>
   <body>
     <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/Anzu/" class="home-link router-link-active"><!----> <span class="site-name">Anzu</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/Anzu/" class="nav-link">
@@ -44,7 +49,7 @@
         Task Commands
       </a>
       →
-    </span></p></div> </main></div><div class="global-ui"></div></div>
-    <script src="/Anzu/assets/js/app.9a826d48.js" defer></script><script src="/Anzu/assets/js/2.5fd72e84.js" defer></script><script src="/Anzu/assets/js/15.94bb97ce.js" defer></script>
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/Anzu/assets/js/app.e4484d65.js" defer></script><script src="/Anzu/assets/js/2.00c218b4.js" defer></script><script src="/Anzu/assets/js/16.61fd67dc.js" defer></script><script src="/Anzu/assets/js/3.7ffcbd81.js" defer></script>
   </body>
 </html>
