@@ -1,8 +1,22 @@
 module.exports = {
   base: '/Anzu/',
-  head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
+  head: [
+    ['link', { rel: 'icon', href: '/favicon.ico' }],
+    ['link', { rel: 'manifest', href: '/manifest.json' }],
+    ['meta', { name: 'theme-color', content: '#3eaf7c' }],
+    ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
+    [
+      'meta',
+      { name: 'apple-mobile-web-app-status-bar-style', content: 'black' },
+    ],
+    [
+      'link',
+      { rel: 'apple-touch-icon', href: '/icons/robot-face-icon-512.png' },
+    ],
+  ],
+  plugins: [['@vuepress/pwa', { serviceWorker: true, updatePopup: true }]],
   title: 'Anzu',
-  description: 'Anzu LINE Bot Documentation',
+  description: 'Anzu, the Open-Source LINE Bot Documentation',
   themeConfig: {
     smoothScroll: true,
     repo: 'lauslim12/Anzu',
