@@ -2,6 +2,11 @@
 
 Changelog is used to keep track of version changes. The versioning scheme used is [SemVer](https://semver.org/). First integer is used for breaking change, second integer is used for major patches, and third integer is used for minor bug fixes.
 
+## Version 2.2.1 (04/01/2021)
+
+- Divided error handling into two: 'intentional' errors and 'major' errors.
+- Refactored `try-catch` blocks with `.catch()` promise method for better readability.
+
 ## Version 2.2.0 (01/01/2021)
 
 - Upgraded documentation to support Progressive Web Applications (PWA).
