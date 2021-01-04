@@ -2,8 +2,8 @@
 
 In order to run Anzu, several prerequisites have to be met.
 
-- NPM (5.x or up)
-- Node.js (12.x or up)
+- NPM (6.x or up)
+- Node.js (14.x or up for LTS, which is what I use, but 12.x is also possible)
 - MongoDB (you could use the [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) version if you want a database-as-a-service)
 - LINE Developers Account (for the API keys)
 
