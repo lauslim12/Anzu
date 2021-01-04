@@ -1,6 +1,6 @@
 {
   "name": "anzu",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "A LINE chatbot to schedule and remind you of your tasks",
   "private": true,
   "main": "dist/server.js",
@@ -64,6 +64,7 @@
     "vuepress": "^1.7.1"
   },
   "engines": {
-    "node": "12.x"
+    "node": "14.x",
+    "npm": "6.x"
   }
 }
