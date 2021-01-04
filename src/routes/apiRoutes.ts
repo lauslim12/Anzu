@@ -1,4 +1,10 @@
-import { WebhookEvent } from '@line/bot-sdk';
+import {
+  JSONParseError,
+  HTTPError,
+  ReadError,
+  RequestError,
+  WebhookEvent,
+} from '@line/bot-sdk';
 import * as adminFunctions from '../functions/adminFunctions';
 import AppError from '../utils/appError';
 import { BehaviorType, ScheduleType } from '../types';
@@ -139,14 +145,19 @@ const apiCall = async (event: WebhookEvent): Promise<null | void> => {
         await adminFunctions.cleanLocally(dataToBeProcessed);
       }
     } catch (err: unknown) {
+      /* Operational errors are intentional errors made by the user's wrong usage. */
       if (err instanceof AppError) {
         await operationalErrorHandler(err);
       }
 
-      if (err instanceof Error) {
-        /* eslint-disable no-console */
-        console.error(err.message);
-        /* eslint-enable no-console */
+      /* The below errors are not intentional errors. */
+      if (
+        err instanceof RequestError ||
+        err instanceof ReadError ||
+        err instanceof HTTPError ||
+        err instanceof JSONParseError
+      ) {
+        throw err;
       }
     }
 
