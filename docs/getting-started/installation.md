@@ -47,6 +47,12 @@ Now, the next step diverges, if you want to install the application in your own 
 - Install the repository to your web server.
 
 ```bash
+npm ci
+```
+
+- If running Node with version less than 6.x, or if you want to contribute to the repository.
+
+```bash
 npm install
 ```
 
