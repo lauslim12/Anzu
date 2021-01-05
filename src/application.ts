@@ -21,7 +21,6 @@ getAllResponsesInApplication();
 
 // Application Setup.
 const app: Application = express();
-let isAPIClientError: boolean = false;
 
 // Middleware Setup.
 app.use(cors());
@@ -55,6 +54,7 @@ app.post(
   lineMiddleware,
   async (req: Request, res: Response): Promise<Response> => {
     const requestEvents: WebhookEvent[] = req.body.events;
+    let isAPIClientError: boolean = false;
 
     await Promise.all(
       requestEvents.map(
@@ -70,10 +70,12 @@ app.post(
               console.error(err.message);
               console.error(err.name);
               console.error(err.stack);
-            }
 
-            if (err instanceof HTTPError) {
-              console.error(err.statusCode, err.statusMessage);
+              if (err instanceof HTTPError) {
+                console.error(err.statusCode, err.statusMessage);
+              }
+            } else {
+              console.error(`Unknown error: ${err}`);
             }
 
             // We set this flag to return a 500 response.
@@ -85,8 +87,6 @@ app.post(
 
     // Prepare to return a 500 response if there are any of 'fatal' errors.
     if (isAPIClientError) {
-      isAPIClientError = false;
-
       return res.status(500).json({
         status: 'error',
       });

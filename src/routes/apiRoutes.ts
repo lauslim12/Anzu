@@ -1,10 +1,4 @@
-import {
-  JSONParseError,
-  HTTPError,
-  ReadError,
-  RequestError,
-  WebhookEvent,
-} from '@line/bot-sdk';
+import { WebhookEvent } from '@line/bot-sdk';
 import * as adminFunctions from '../functions/adminFunctions';
 import AppError from '../utils/appError';
 import { BehaviorType, ScheduleType } from '../types';
@@ -15,52 +9,52 @@ import operationalErrorHandler from '../functions/errorFunctions';
 import personalAnzuConfigurations from '../constants';
 import * as taskFunctions from '../functions/taskFunctions';
 
-const apiCall = async (event: WebhookEvent): Promise<null | void> => {
+const apiCall = async (event: WebhookEvent): Promise<boolean> => {
   // Prepare initial variables for 'JoinEvent' and 'FollowEvent'.
   const { sourceId, sourceType } = getSourceId(event.source);
 
-  // 1. Our 'event handler' that will catch any events other than 'message' events.
-  if (event.type === 'join' || event.type === 'follow') {
-    // Prepare our variables.
-    const { replyToken } = event;
+  try {
+    // 1. Our 'event handler' that will catch any events other than 'message' events.
+    if (event.type === 'join' || event.type === 'follow') {
+      // Prepare our variables.
+      const { replyToken } = event;
 
-    // Encapsulate them on an object for easier data processing.
-    const behaviorDataToBeProcessed: BehaviorType = {
-      sourceId,
-      sourceType,
-      replyToken,
-    };
+      // Encapsulate them on an object for easier data processing.
+      const behaviorDataToBeProcessed: BehaviorType = {
+        sourceId,
+        sourceType,
+        replyToken,
+      };
 
-    if (event.type === 'join') {
-      await behaviorFunctions.join(behaviorDataToBeProcessed);
-    } else if (event.type === 'follow') {
-      await behaviorFunctions.added(behaviorDataToBeProcessed);
+      if (event.type === 'join') {
+        await behaviorFunctions.join(behaviorDataToBeProcessed);
+      } else if (event.type === 'follow') {
+        await behaviorFunctions.added(behaviorDataToBeProcessed);
+      }
     }
-  }
 
-  // 2. Check if invalid input or invalid event type, Anzu does not need to respond.
-  // Resolve the promise and exit the asynchronous map function.
-  if (event.type !== 'message' || event.message.type !== 'text') {
-    return Promise.resolve(null);
-  }
+    // 2. Check if invalid input or invalid event type, Anzu does not need to respond.
+    // Resolve the promise and exit the asynchronous map function.
+    if (event.type !== 'message' || event.message.type !== 'text') {
+      return Promise.resolve(true);
+    }
 
-  // 3. Access our routes.
-  if (event.type === 'message') {
-    // Prepare our variables to be processed in the subfunctions.
-    const { text } = event.message;
-    const { replyToken } = event;
-    const { userId } = event.source || '';
+    // 3. Access our routes.
+    if (event.type === 'message') {
+      // Prepare our variables to be processed in the subfunctions.
+      const { text } = event.message;
+      const { replyToken } = event;
+      const { userId } = event.source || '';
 
-    // Encapsulate our data to an object for better handling.
-    const dataToBeProcessed: ScheduleType = {
-      sourceId,
-      sourceType,
-      command: text,
-      scheduler: userId,
-      replyToken,
-    };
+      // Encapsulate our data to an object for better handling.
+      const dataToBeProcessed: ScheduleType = {
+        sourceId,
+        sourceType,
+        command: text,
+        scheduler: userId,
+        replyToken,
+      };
 
-    try {
       // 4. Feature guard: if below routes match, apply filter guard first.
       if (
         text.startsWith('System Call: Purge') ||
@@ -144,25 +138,20 @@ const apiCall = async (event: WebhookEvent): Promise<null | void> => {
       if (text.startsWith('System Call: Local Deletion')) {
         await adminFunctions.cleanLocally(dataToBeProcessed);
       }
-    } catch (err: unknown) {
-      /* Operational errors are intentional errors made by the user's wrong usage. */
-      if (err instanceof AppError) {
-        await operationalErrorHandler(err);
-      }
-
-      /* The below errors are not intentional errors. */
-      if (
-        err instanceof RequestError ||
-        err instanceof ReadError ||
-        err instanceof HTTPError ||
-        err instanceof JSONParseError
-      ) {
-        throw err;
-      }
+    }
+  } catch (err: unknown) {
+    /* Operational errors are intentional errors made by the user's wrong usage. */
+    if (err instanceof AppError) {
+      await operationalErrorHandler(err);
     }
 
-    return Promise.resolve(null);
+    /* The below errors are not intentional errors. */
+    if (!(err instanceof AppError)) {
+      throw err;
+    }
   }
+
+  return Promise.resolve(true);
 };
 
 export default apiCall;
