@@ -1,6 +1,6 @@
 {
   "name": "anzu",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "A LINE chatbot to schedule and remind you of your tasks",
   "private": true,
   "main": "dist/server.js",
@@ -16,7 +16,9 @@
     "docs:build": "vuepress build docs",
     "docs:deploy": "npm run clean:docs && npm run docs:build && gh-pages -d ./docs/.vuepress/dist -m \"[skip ci] chore: Deployed documentation to GitHub Pages\"",
     "start": "node ./dist/server.js",
-    "build": "npm run clean && tsc"
+    "build": "npm run clean && tsc",
+    "check-updates": "npx ncu",
+    "update-deps": "npx ncu -u"
   },
   "repository": {
     "type": "git",
@@ -58,6 +60,7 @@
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
     "gh-pages": "^3.1.0",
+    "npm-check-updates": "^11.3.0",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.1.3",
