@@ -36,7 +36,7 @@ const apiCall = async (event: WebhookEvent): Promise<boolean> => {
     // 2. Check if invalid input or invalid event type, Anzu does not need to respond.
     // Resolve the promise and exit the asynchronous map function.
     if (event.type !== 'message' || event.message.type !== 'text') {
-      return Promise.resolve(true);
+      return await Promise.resolve(true);
     }
 
     // 3. Access our routes.

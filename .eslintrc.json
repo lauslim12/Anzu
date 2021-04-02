@@ -19,6 +19,7 @@
       "always",
       { "exceptAfterSingleLine": true }
     ],
+    "@typescript-eslint/return-await": "off",
     "prettier/prettier": "error",
     "spaced-comment": "off",
     "no-console": "warn",
