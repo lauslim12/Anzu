@@ -70,7 +70,9 @@ const webhookHandler = async (
     }
 
     if (userHelpCommands.includes(text.toLowerCase())) {
-      handleChat(text);
+      const res = await handleChat(text);
+
+      await sendResponse(res, client, replyToken);
     }
 
     if (userBehaviorCommands.includes(text)) {

@@ -1,12 +1,20 @@
+import responses from './responses';
+
 /**
  * Handles all stateless commands.
  *
  * @param message - Text message
  */
 const handleChat = async (message: string) => {
-  // handle...
-  const a = 1 + 1;
-  return `${a} ${message}`;
+  if (message.startsWith('/help')) {
+    return responses.help();
+  }
+
+  if (message.toLowerCase().includes('anzu')) {
+    return responses.anzu();
+  }
+
+  return '';
 };
 
 export default handleChat;
