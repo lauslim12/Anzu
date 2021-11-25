@@ -6,6 +6,7 @@ import environments from './config/environments';
 import loadExpress from './infra/express';
 import { loadLINEClient, loadLINEMiddleware } from './infra/line';
 import loadMongoDB from './infra/mongodb';
+import SourceModel from './source/schema';
 import TaskModel from './task/schema';
 
 /**
@@ -24,7 +25,8 @@ async function startApp() {
     express(),
     loadLINEClient,
     loadLINEMiddleware,
-    TaskModel
+    TaskModel,
+    SourceModel
   );
 
   /**

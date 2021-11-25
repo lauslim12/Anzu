@@ -7,6 +7,9 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
 
+import SourceRepository from '../source/repository';
+import SourceModel from '../source/schema';
+import SourceService from '../source/service';
 import TaskRepository from '../task/repository';
 import TaskModel from '../task/schema';
 import TaskService from '../task/service';
@@ -25,7 +28,8 @@ const loadExpress = (
   app: Application,
   client: Client,
   middleware: Middleware,
-  taskModel: typeof TaskModel
+  taskModel: typeof TaskModel,
+  sourceModel: typeof SourceModel
 ) => {
   // Load middlewares.
   app.use(helmet());
@@ -52,9 +56,11 @@ const loadExpress = (
 
   // Define repositories.
   const taskRepository = new TaskRepository(taskModel);
+  const sourceRepository = new SourceRepository(sourceModel);
 
   // Define services.
   const taskService = new TaskService(taskRepository);
+  const sourceService = new SourceService(sourceRepository);
 
   // Define route for connection tests.
   app.get('/', (_: Request, res: Response) => {
@@ -71,7 +77,9 @@ const loadExpress = (
 
     try {
       const results = await Promise.all(
-        events.map((event) => webhookHandler(client, event, taskService))
+        events.map((event) =>
+          webhookHandler(client, event, taskService, sourceService)
+        )
       );
 
       res.status(200).json({

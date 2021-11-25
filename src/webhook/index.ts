@@ -5,6 +5,7 @@ import handleAdmin from '../admin/handler';
 import handleBehavior from '../behavior/handler';
 import handleChat from '../chat/handler';
 import handleListener from '../listener/handler';
+import SourceService from '../source/service';
 import type { TaskCommands } from '../task/domain';
 import handleTask from '../task/handler';
 import TaskService from '../task/service';
@@ -53,10 +54,11 @@ const sendResponse = async (message: string, client: Client, token: string) => {
 const webhookHandler = async (
   client: Client,
   event: WebhookEvent,
-  taskService: TaskService
+  taskService: TaskService,
+  sourceService: SourceService
 ) => {
   if (event.type === 'follow' || event.type === 'join') {
-    const res = await handleListener(event.type);
+    const res = await handleListener(event.type, event.source, sourceService);
 
     await sendResponse(res, client, event.replyToken);
   }
