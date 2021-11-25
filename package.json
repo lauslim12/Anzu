@@ -14,7 +14,6 @@
     "lint": "yarn format-check && yarn type-check && yarn-eslint-check",
     "docs-dev": "vuepress dev ./docs",
     "docs-build": "vuepress build ./docs",
-    "docs-deploy": "yarn clean:docs && yarn docs:build && gh-pages -d ./docs/.vuepress/dist -m \"[skip ci] chore: Deployed documentation to GitHub Pages\"",
     "start": "node ./dist",
     "build": "yarn clean && tsc"
   },
@@ -56,7 +55,6 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-security": "^1.4.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
-    "gh-pages": "^3.2.3",
     "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.5.2",
