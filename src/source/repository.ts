@@ -26,6 +26,18 @@ class SourceRepository implements Repository {
 
     return newSource;
   }
+
+  /**
+   * Gets a single source information.
+   *
+   * @param sourceId - Source ID
+   * @returns Source if it exists
+   */
+  async getSource(sourceId: string) {
+    const source = await this.model.findOne({ sourceId });
+
+    return source;
+  }
 }
 
 export default SourceRepository;

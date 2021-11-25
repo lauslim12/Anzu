@@ -20,21 +20,25 @@ const handleListener = async (
   const { sourceId, sourceType } = getEventMetadata(source);
 
   if (type === 'follow') {
-    await sourceService.createSource({
-      sourceId,
-      sourceType,
-      dateAdded: Date.now(),
-    });
+    if (await sourceService.getSource(sourceId)) {
+      await sourceService.createSource({
+        sourceId,
+        sourceType,
+        dateAdded: Date.now(),
+      });
+    }
 
     return responses.added();
   }
 
   if (type === 'join') {
-    await sourceService.createSource({
-      sourceId,
-      sourceType,
-      dateAdded: Date.now(),
-    });
+    if (await sourceService.getSource(sourceId)) {
+      await sourceService.createSource({
+        sourceId,
+        sourceType,
+        dateAdded: Date.now(),
+      });
+    }
 
     return responses.join();
   }

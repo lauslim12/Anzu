@@ -21,6 +21,18 @@ class SourceService implements Service {
 
     return newSource;
   }
+
+  /**
+   * Gets a single source by ID.
+   *
+   * @param sourceId - Source ID
+   * @returns A source if it exists
+   */
+  async getSource(sourceId: string) {
+    const source = await this.sourceRepository.getSource(sourceId);
+
+    return source;
+  }
 }
 
 export default SourceService;

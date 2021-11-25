@@ -13,6 +13,7 @@ export type Source = {
  */
 export interface Service {
   createSource: (source: Omit<Source, '_id'>) => Promise<Source>;
+  getSource: (sourceId: string) => Promise<Source | null>;
 }
 
 /**
@@ -20,4 +21,5 @@ export interface Service {
  */
 export interface Repository {
   createSource: (source: Omit<Source, '_id'>) => Promise<Source>;
+  getSource: (sourceId: string) => Promise<Source | null>;
 }
