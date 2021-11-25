@@ -1,6 +1,14 @@
 import type { WebhookEvent } from '@line/bot-sdk';
 import { Client } from '@line/bot-sdk';
 
+import handleAdmin from '../admin/handler';
+import handleBehavior from '../behavior/handler';
+import handleChat from '../chat/handler';
+import handleListener from '../listener/handler';
+import type { TaskCommands } from '../task/domain';
+import handleTask from '../task/handler';
+import TaskService from '../task/service';
+
 /**
  * All administrator commands.
  */
@@ -14,13 +22,7 @@ const adminCommands = [
 /**
  * All user commands to manage their tasks.
  */
-const userTaskCommands = [
-  '/delete',
-  '/finish',
-  '/schedule',
-  '/reschedule',
-  '/tasks',
-];
+const userTaskCommands = ['/finish', '/schedule', '/reschedule', '/tasks'];
 
 /**
  * All user commands to ask for help / stateless commands.
@@ -33,62 +35,15 @@ const userHelpCommands = ['/help', 'anzu'];
 const userBehaviorCommands = ['/leave'];
 
 /**
- * Handles all admin commands.
- *
- * @param message - Text message
- */
-const handleAdmin = async (message: string) => {
-  // handle...
-};
-
-/**
- * Handles all behavioral commands.
- *
- * @param message - Text message
- */
-const handleBehavior = async (message: string) => {
-  // handle...
-};
-
-/**
- * Handles all stateless commands.
- *
- * @param message - Text message
- */
-const handleChat = async (message: string) => {
-  // handle...
-};
-
-/**
- * Handles all 'listener' / 'pub/sub' events (joining, following, etc.).
- *
- * @param type - Event type from webhook event
- */
-const handleListener = async (type: WebhookEvent['type']) => {
-  if (type === 'follow') {
-    // greet after follow...
-  }
-
-  if (type === 'join') {
-    // greet after join...
-  }
-};
-
-/**
- * Handles all tasks commands.
- *
- * @param message - Text message
- */
-const handleTask = async (message: string) => {
-  // handle...
-};
-
-/**
  * Main event handler / webhook for our Anzu.
  *
  * @param event - Webhook event
  */
-const handler = async (client: Client, event: WebhookEvent) => {
+const webhookHandler = async (
+  client: Client,
+  event: WebhookEvent,
+  taskService: TaskService
+) => {
   if (event.type === 'follow' || event.type === 'join') {
     handleListener(event.type);
 
@@ -96,6 +51,7 @@ const handler = async (client: Client, event: WebhookEvent) => {
   }
 
   if (event.type === 'message' && event.message.type === 'text') {
+    const { source, replyToken } = event;
     const { text } = event.message;
 
     if (adminCommands.includes(text)) {
@@ -111,13 +67,20 @@ const handler = async (client: Client, event: WebhookEvent) => {
     }
 
     if (userTaskCommands.includes(text)) {
-      handleTask(text);
-    }
+      const response = await handleTask(
+        text as TaskCommands,
+        source,
+        taskService
+      );
 
-    await client.replyMessage(event.replyToken, { type: 'text', text: '...' });
+      await client.replyMessage(replyToken, {
+        type: 'text',
+        text: response,
+      });
+    }
   }
 
   Promise.resolve(null);
 };
 
-export default handler;
+export default webhookHandler;
