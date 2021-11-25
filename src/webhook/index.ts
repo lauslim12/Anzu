@@ -35,6 +35,17 @@ const userHelpCommands = ['/help', 'anzu'];
 const userBehaviorCommands = ['/leave'];
 
 /**
+ * Sends back response to the user after doing the commands.
+ *
+ * @param message - Message to be sent back to the client
+ * @param client - A LINE instance
+ * @param token - A reply token
+ */
+const sendResponse = async (message: string, client: Client, token: string) => {
+  await client.replyMessage(token, { type: 'text', text: message });
+};
+
+/**
  * Main event handler / webhook for our Anzu.
  *
  * @param event - Webhook event
@@ -45,9 +56,9 @@ const webhookHandler = async (
   taskService: TaskService
 ) => {
   if (event.type === 'follow' || event.type === 'join') {
-    handleListener(event.type);
+    const res = await handleListener(event.type);
 
-    await client.replyMessage(event.replyToken, { type: 'text', text: '...' });
+    await sendResponse(res, client, event.replyToken);
   }
 
   if (event.type === 'message' && event.message.type === 'text') {
@@ -67,16 +78,9 @@ const webhookHandler = async (
     }
 
     if (userTaskCommands.includes(text)) {
-      const response = await handleTask(
-        text as TaskCommands,
-        source,
-        taskService
-      );
+      const res = await handleTask(text as TaskCommands, source, taskService);
 
-      await client.replyMessage(replyToken, {
-        type: 'text',
-        text: response,
-      });
+      await sendResponse(res, client, replyToken);
     }
   }
 
