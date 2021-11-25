@@ -3,71 +3,102 @@
   "version": "2.2.4",
   "description": "A LINE chatbot to schedule and remind you of your tasks",
   "private": true,
-  "main": "dist/server.js",
+  "main": "dist/index.js",
   "scripts": {
     "clean": "rimraf ./dist",
-    "clean:docs": "rimraf ./docs/.vuepress/dist",
-    "format": "prettier --write --config ./.prettierrc ./**/*.{js,ts}",
-    "format:check": "prettier --check --config ./.prettierrc ./**/*.{js,ts}",
-    "type:check": "tsc --noEmit",
-    "eslint:check": "npx eslint . --ext .ts",
-    "lint": "npm run eslint:check && npm run type:check",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
-    "docs:deploy": "npm run clean:docs && npm run docs:build && gh-pages -d ./docs/.vuepress/dist -m \"[skip ci] chore: Deployed documentation to GitHub Pages\"",
-    "start": "node ./dist/server.js",
-    "build": "npm run clean && tsc",
-    "check-updates": "npx ncu",
-    "update-deps": "npx ncu -u"
+    "clean-docs": "rimraf ./docs/.vuepress/dist",
+    "circular-check": "dpdm --tree --circular --warning ./**/*.ts",
+    "format-check": "prettier --check ./**/*.ts",
+    "eslint-check": "eslint . --ext .ts",
+    "type-check": "tsc --noEmit",
+    "lint": "yarn format-check && yarn type-check && yarn-eslint-check",
+    "docs-dev": "vuepress dev ./docs",
+    "docs-build": "vuepress build ./docs",
+    "docs-deploy": "yarn clean:docs && yarn docs:build && gh-pages -d ./docs/.vuepress/dist -m \"[skip ci] chore: Deployed documentation to GitHub Pages\"",
+    "start": "node ./dist",
+    "build": "yarn clean && tsc"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lauslim12/Anzu.git"
+    "url": "git+https://github.com/lauslim12/anzu.git"
   },
-  "author": "Nicholas Dwiarto <nicholasdwiarto@yahoo.com> (https://nicholasdw.com)",
+  "author": "Nicholas (https://www.nicholasdw.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lauslim12/Anzu/issues"
+    "url": "https://github.com/lauslim12/anzu/issues"
   },
-  "homepage": "https://lauslim12.github.io/Anzu/",
+  "homepage": "https://lauslim12.github.io/anzu/",
   "dependencies": {
-    "@line/bot-sdk": "^7.2.0",
+    "@line/bot-sdk": "^7.4.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "helmet": "^4.4.1",
-    "mongoose": "^5.12.3",
+    "helmet": "^4.6.0",
+    "mongoose": "^6.0.13",
     "node-cron": "^3.0.0"
   },
   "devDependencies": {
-    "@types/compression": "^1.7.0",
-    "@types/cors": "^2.8.10",
-    "@types/express": "^4.17.11",
-    "@types/mongoose": "^5.10.4",
-    "@types/node": "^14.14.37",
-    "@types/node-cron": "^2.0.3",
-    "@typescript-eslint/eslint-plugin": "^4.20.0",
-    "@typescript-eslint/parser": "^4.20.0",
-    "@vuepress/plugin-pwa": "^1.8.2",
-    "eslint": "^7.23.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-airbnb-typescript": "^12.3.1",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "@types/compression": "^1.7.2",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^16.11.10",
+    "@types/node-cron": "^3.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "@vuepress/plugin-pwa": "^2.0.0-beta.27",
+    "dpdm": "^3.8.0",
+    "eslint": "^8.3.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^16.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.23.1",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "gh-pages": "^3.1.0",
-    "npm-check-updates": "^11.3.0",
-    "prettier": "^2.2.1",
+    "eslint-plugin-security": "^1.4.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "gh-pages": "^3.2.3",
+    "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
-    "typescript": "^4.2.3",
-    "vuepress": "^1.8.2"
+    "typescript": "^4.5.2",
+    "vuepress": "^2.0.0-beta.27"
+  },
+  "eslintConfig": {
+    "extends": [
+      "airbnb-base",
+      "airbnb-typescript/base",
+      "plugin:node/recommended",
+      "plugin:security/recommended"
+    ],
+    "plugins": [
+      "simple-import-sort"
+    ],
+    "rules": {
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
+      "import/first": "error",
+      "import/newline-after-import": "error",
+      "import/no-duplicates": "error",
+      "node/no-unsupported-features/es-syntax": [
+        "error",
+        {
+          "ignores": [
+            "modules"
+          ]
+        }
+      ]
+    },
+    "parserOptions": {
+      "ecmaVersion": 2021,
+      "sourceType": "module",
+      "project": "./tsconfig.json"
+    }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "printWidth": 80,
+    "endOfLine": "lf"
   },
   "engines": {
-    "node": "14.x",
-    "npm": "6.x"
+    "node": "16.x"
   }
 }
