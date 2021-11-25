@@ -5,6 +5,7 @@ declare global {
       CHANNEL_ACCESS_TOKEN: string;
       CHANNEL_SECRET: string;
       DATABASE: string;
+      PORT: string;
     }
   }
 }
