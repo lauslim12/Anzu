@@ -7,8 +7,11 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
 
-import handler from '../handler';
+import TaskRepository from '../task/repository';
+import TaskModel from '../task/schema';
+import TaskService from '../task/service';
 import AppError from '../utils/appError';
+import webhookHandler from '../webhook';
 
 /**
  * Loads a new Express application with all middlewares for usage.
@@ -16,12 +19,14 @@ import AppError from '../utils/appError';
  * @param app - Express application
  * @param client - LINE Client
  * @param middleware - LINE Middleware
+ * @param taskModel - Mongoose's model for 'Task' entity
  * @returns Loaded Express application
  */
 const loadExpress = (
   app: Application,
   client: Client,
-  middleware: Middleware
+  middleware: Middleware,
+  taskModel: typeof TaskModel
 ) => {
   // Load middlewares.
   app.use(helmet());
@@ -42,6 +47,12 @@ const loadExpress = (
     next();
   });
 
+  // Define repositories.
+  const taskRepository = new TaskRepository(taskModel);
+
+  // Define services.
+  const taskService = new TaskService(taskRepository);
+
   // Define route for connection tests.
   app.get('/', (_: Request, res: Response) => {
     res.status(200).json({
@@ -57,7 +68,7 @@ const loadExpress = (
 
     try {
       const results = await Promise.all(
-        events.map((event) => handler(client, event))
+        events.map((event) => webhookHandler(client, event, taskService))
       );
 
       res.status(200).json({
