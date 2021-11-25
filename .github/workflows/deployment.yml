@@ -1,0 +1,48 @@
+name: Heroku and Vuepress
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  heroku:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build application, push to Heroku, and deploy on Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+
+  vuepress:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'yarn'
+          cache-dependency-path: ./yarn.lock
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Build documentation
+        run: yarn docs-build
+
+      - name: Deploy documentation to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.6
+        with:
+          branch: gh-pages
+          folder: ./docs/.vuepress/dist
+          commit-message: '[skip ci] chore: Deployed documentation to GitHub Pages'
