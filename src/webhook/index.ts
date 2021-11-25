@@ -76,7 +76,9 @@ const webhookHandler = async (
     }
 
     if (userBehaviorCommands.includes(text)) {
-      handleBehavior(text);
+      const res = await handleBehavior(client, source, text);
+
+      await sendResponse(res, client, replyToken);
     }
 
     if (userTaskCommands.includes(text)) {
