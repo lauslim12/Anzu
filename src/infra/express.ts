@@ -10,7 +10,6 @@ import morgan from 'morgan';
 import TaskRepository from '../task/repository';
 import TaskModel from '../task/schema';
 import TaskService from '../task/service';
-import AppError from '../utils/appError';
 import webhookHandler from '../webhook';
 
 /**
@@ -37,10 +36,14 @@ const loadExpress = (
   app.use(morgan('combined'));
 
   // Prevent XST atttacks by filtering allowed methods.
-  app.use((req: Request, _: Response, next: NextFunction) => {
+  app.use((req: Request, res: Response, next: NextFunction) => {
     const allowedMethods = ['OPTIONS', 'HEAD', 'CONNECT', 'GET', 'POST'];
     if (!allowedMethods.includes(req.method)) {
-      next(new AppError(`Method '${req.method}' is not allowed!`, 405));
+      res.status(405).json({
+        status: 'fail',
+        message: `Method '${req.method}' is not allowed!`,
+      });
+
       return;
     }
 
@@ -77,36 +80,19 @@ const loadExpress = (
         results,
       });
     } catch {
-      throw new AppError(
-        'Failed to process all events due to an internal error!',
-        503
-      );
+      res.status(503).json({
+        status: 'error',
+        message: 'Failed to process all events due to an internal error!',
+      });
     }
   });
 
   // Define 404 route.
-  app.all('*', (req: Request, _: Response, next: NextFunction) => {
-    next(new AppError(`Cannot find ${req.originalUrl} on this server!`, 404));
-  });
-
-  // Configure error handler.
-  app.use((err: AppError, _: Request, res: Response, next: NextFunction) => {
-    if (err.isOperational) {
-      res.status(err.statusCode).json({
-        status: err.status,
-        message: err.message,
-      });
-
-      next();
-      return;
-    }
-
-    res.status(500).json({
-      status: 'error',
-      message: 'An unknown error occured. Please try again later.',
+  app.all('*', (req: Request, res: Response) => {
+    res.status(404).json({
+      status: 'fail',
+      message: `Cannot find ${req.originalUrl} on this server!`,
     });
-
-    next();
   });
 
   // Return application.
