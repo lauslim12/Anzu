@@ -1,1 +1,0 @@
-Thank you! Your task of '<%MESSAGE0%>' with the deadline being <%MESSAGE1%> has been created successfully!

@@ -1,7 +1,0 @@
-Hello everyone! How are you?
-
-This is an automated message from Anzu to remind you all of your schedules. Here is it:
-
-<%MESSAGE0%>
-
-Good luck and stay in high spirits!

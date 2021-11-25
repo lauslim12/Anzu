@@ -1,7 +1,0 @@
-Hello everyone! How are you?
-
-This is an automated message from Anzu to remind you all of your schedules.
-
-Please check out '/tasks' to see all of your due tasks!
-
-Good luck and stay positive!

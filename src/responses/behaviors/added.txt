@@ -1,5 +1,0 @@
-Hi! Thank you for adding me, Anzu, as your personal group chat bot!
-
-I am open source! Check out my source code at this link: https://github.com/lauslim12/Anzu!
-
-You can start using me by typing '/help' and/or inviting me to a group or a chat room. See ya later!

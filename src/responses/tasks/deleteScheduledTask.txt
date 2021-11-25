@@ -1,1 +1,0 @@
-Task with the name '<%MESSAGE0%>' has been deleted!

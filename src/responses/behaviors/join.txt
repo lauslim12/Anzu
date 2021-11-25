@@ -1,5 +1,0 @@
-Hello everyone! Thank you for inviting me in this environment. I hope I can be a good assistant!
-
-In case you do not know me yet, I am Anzu, a scheduler bot that helps you manage your tasks and deadlines.
-
-Please use '/help' (without parentheses) to get started with me!
