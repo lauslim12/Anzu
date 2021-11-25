@@ -1,3 +1,4 @@
+import createFormattedDeadline from '../utils/createFormattedDeadline';
 import type { Task } from './domain';
 
 /**
@@ -21,7 +22,9 @@ const responses = {
    */
   getScheduledTasksResponse: (tasks: Task[]) => {
     const compiledTasks = tasks
-      .map((task) => `${task.name} - ${task.deadline}`)
+      .map((task, idx) =>
+        createFormattedDeadline(task.name, task.deadline, idx)
+      )
       .join('\n');
 
     return `Hello everyone!
