@@ -8,7 +8,31 @@ import {
 } from '../utils/generalUtilities';
 import getEventMetadata from '../utils/getEventMetadata';
 import type { TaskCommands } from './domain';
+import responses from './responses';
 import TaskService from './service';
+
+/**
+ * Validates task name and date (string representation).
+ *
+ * @param taskName - A task name
+ * @param date - The date of the input
+ * @returns An error message or null
+ */
+const validateTaskNameAndDate = (taskName: string, date: string) => {
+  if (!isDateValid(date)) {
+    return 'Invalid date! Please enter date in YYYY-MM-DD format!';
+  }
+
+  if (isDateLessThanToday(date)) {
+    return 'You can only assign a task whose deadline is today or greater than today!';
+  }
+
+  if (isStringEmpty(taskName)) {
+    return 'Please specify the task name!';
+  }
+
+  return null;
+};
 
 /**
  * Handles all tasks commands.
@@ -21,7 +45,6 @@ const handleTask = async (
   source: EventSource,
   taskService: TaskService
 ) => {
-  // parse all sources
   const { userId, sourceId, sourceType } = getEventMetadata(source);
 
   if (message === '/finish') {
@@ -37,33 +60,28 @@ const handleTask = async (
     // delete task
     await taskService.finishTask(taskName, sourceId);
 
-    return `Task ${taskName} has been finished!`;
+    // print message
+    const response = responses.finishTaskResponse(taskName);
+
+    return response;
   }
 
   if (message === '/schedule') {
     // example input: /schedule 2021-11-25 I chatted with my neighbor today
     const date = message.split(' ')[1];
     const taskName = message.split(' ').splice(2).join(' ');
-
-    // validate input
     if (!date) {
       return 'Date is not found in your command!';
     }
 
-    if (!isDateValid(date)) {
-      return 'Invalid date! Please enter date in YYYY-MM-DD format!';
-    }
-
-    if (isDateLessThanToday(date)) {
-      return 'You can only assign a task whose deadline is today or greater than today!';
-    }
-
-    if (isStringEmpty(taskName)) {
-      return 'Please specify the task name!';
+    // validate input
+    const err = validateTaskNameAndDate(taskName, date);
+    if (err) {
+      return err;
     }
 
     // create new task
-    const task = await taskService.scheduleTask({
+    await taskService.scheduleTask({
       sourceId,
       name: taskName,
       deadline: new Date(date).getTime() / 1000,
@@ -72,13 +90,19 @@ const handleTask = async (
       dateAdded: Date.now(),
     });
 
-    return `Task '${task.name}' with deadline of ${date} has been scheduled!`;
+    // print message
+    const response = responses.scheduleTaskResponse(taskName, date);
+
+    return response;
   }
 
   if (message === '/reschedule') {
     // example input: /reschedule 2021-11-27 I chatted with my neighbor today
     const date = message.split(' ')[1];
     const taskName = message.split(' ').splice(2).join(' ');
+    if (!date) {
+      return 'Date is not found in your command!';
+    }
 
     // check whether the task is available or not
     const task = await taskService.getTask(taskName, sourceId);
@@ -87,27 +111,19 @@ const handleTask = async (
     }
 
     // validate all inputs
-    if (!date) {
-      return 'Date is not found in your command!';
-    }
-
-    if (!isDateValid(date)) {
-      return 'Invalid date! Please enter date in YYYY-MM-DD format!';
-    }
-
-    if (isDateLessThanToday(date)) {
-      return 'You can only assign a task whose deadline is today or greater than today!';
-    }
-
-    if (isStringEmpty(taskName)) {
-      return 'Please specify the task name!';
+    const err = validateTaskNameAndDate(taskName, date);
+    if (err) {
+      return err;
     }
 
     // update tasks
     const newDeadline = new Date(date).getTime() / 1000;
     await taskService.rescheduleTask(taskName, sourceId, newDeadline);
 
-    return `Task ${taskName} has been updated to a new deadline!`;
+    // print message
+    const response = responses.rescheduleTaskResponse(taskName, date);
+
+    return response;
   }
 
   // lastly, for our final input
@@ -117,7 +133,10 @@ const handleTask = async (
     return 'You have no tasks due!';
   }
 
-  return `Tasks ${tasks}`;
+  // print message
+  const response = responses.getScheduledTasksResponse(tasks);
+
+  return response;
 };
 
 export default handleTask;
