@@ -1,20 +1,11 @@
-import type { ClientConfig, MiddlewareConfig } from '@line/bot-sdk';
 import { Client, middleware } from '@line/bot-sdk';
 
 import environments from '../config/environments';
 
 /**
- * Creates a configuration for LINE Client.
+ * Creates a configuration for LINE SDK.
  */
-const LINEClientConfig: ClientConfig = {
-  channelAccessToken: environments.line.channelAccess,
-  channelSecret: environments.line.channelSecret,
-};
-
-/**
- * Creates a configuration for LINE Middleware.
- */
-const LINEMiddlewareConfig: MiddlewareConfig = {
+const LINEConfig = {
   channelAccessToken: environments.line.channelAccess,
   channelSecret: environments.line.channelSecret,
 };
@@ -22,9 +13,9 @@ const LINEMiddlewareConfig: MiddlewareConfig = {
 /**
  * Creates a LINE Client for usage.
  */
-export const LINEClient = new Client(LINEClientConfig);
+export const loadLINEClient = new Client(LINEConfig);
 
 /**
  * Creates a specialized LINE middleware to process webhook events.
  */
-export const LINEMiddleware = middleware(LINEMiddlewareConfig);
+export const loadLINEMiddleware = middleware(LINEConfig);

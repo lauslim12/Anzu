@@ -1,4 +1,5 @@
 import type { WebhookEvent } from '@line/bot-sdk';
+import { Client } from '@line/bot-sdk';
 import { Middleware } from '@line/bot-sdk/dist/middleware';
 import compression from 'compression';
 import type { Application, NextFunction, Request, Response } from 'express';
@@ -6,6 +7,7 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
 
+import handler from '../handler';
 import AppError from '../utils/appError';
 
 /**
@@ -16,7 +18,11 @@ import AppError from '../utils/appError';
  * @param middleware - LINE Middleware
  * @returns Loaded Express application
  */
-const loadExpress = (app: Application, middleware: Middleware) => {
+const loadExpress = (
+  app: Application,
+  client: Client,
+  middleware: Middleware
+) => {
   // Load middlewares.
   app.use(helmet());
   app.use(hpp());
@@ -50,7 +56,9 @@ const loadExpress = (app: Application, middleware: Middleware) => {
     const { events }: { events: WebhookEvent[] } = req.body;
 
     try {
-      const results = await Promise.all(events);
+      const results = await Promise.all(
+        events.map((event) => handler(client, event))
+      );
 
       res.status(200).json({
         status: 'success',
