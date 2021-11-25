@@ -1,6 +1,6 @@
 # Anzu
 
-Anzu (she/her) is an open source LINE chatbot to remind you of your tasks. Anzu is fully asynchronous and uses JavaScript's natural asynchronous nature to its fullest.
+Anzu (she/her) is an open source LINE chatbot to remind you of your tasks. Anzu is fully asynchronous and uses JavaScript's natural asynchronous nature to its fullest. The newly version of Anzu will implement a lot of code refactor and configurations!
 
 <p align="center">
   <img src="https://img.shields.io/badge/license-MIT-yellow.svg" />
